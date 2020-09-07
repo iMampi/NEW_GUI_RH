@@ -3,6 +3,8 @@ from tkinter import ttk
 import widgets_3 as w
 import base_ex as m
 
+#TODO: update "state" with the new data format in model,
+# and all the loop that goes throught myinfos.data
 class MyViewFrame(tk.Frame):
     def __init__(self,parent,mode=None,callbacks=None,*args,**kwargs):
         super().__init__(parent,*args,**kwargs)
@@ -36,6 +38,18 @@ class MyViewFrame(tk.Frame):
                     self.columnconfigure(1, weight=1,minsize=100)
                     self.inputs[field] = x.MyInput
                     counter += 1
+        elif self.mode is "fire":
+            for field in m.MyInfos.data.keys():
+                if m.MyInfos.data[field][self.mode] == True:
+                    x = w.Label_Input(self, mode=self.mode, label=field)
+                    # changer en ref to data>type>widget type pour le cas image
+                    # self.grid_propagate(0)
+                    x.grid(row=counter, column=0)
+                    self.columnconfigure(0, weight=0,minsize=100)
+                    self.columnconfigure(1, weight=1,minsize=100)
+                    self.inputs[field] = x.MyInput
+                    counter += 1
+
 
         # ButtonsFrame=tk.Frame(self)
         # ButtonsFrame.grid(row=2, column=0, sticky="we", columnspan=2)

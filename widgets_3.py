@@ -11,7 +11,9 @@ class Label_Radiobox:
         MyInfo=MyInfos.data.get(label,"Error 404")
         self.var_type = self.field_type[MyInfo["type"]]
          
-
+#TODO: update state with the new data format
+#TODO : use .et to retrieve dict values
+#TODO : implement the img downloader annd imge widget displayer
 class Label_Input(tk.Frame):
     #change variable type for image file and tk.Text
     field_type ={

@@ -15,12 +15,13 @@ class MyRoot(tk.Tk):
                         "Next":self.next_,
                         "creation":self.mode_creation,
                         "consultation":self.mode_consultation,
-                        "modification":self.mode_modification
+                        "modification":self.mode_modification,
+                        "fire":self.mode_fire
                         }
         self.MyMainFrame=None
         
         self.construction()
-        
+        self.minsize(width=600, height=900)
     def construction(self):
         
         self.MyMainFrame=v.MyMainFrame(self,mode=self.mode,callbacks=self.callbacks)
@@ -34,7 +35,7 @@ class MyRoot(tk.Tk):
         #self.MyMainFrame.pw1.configure(height=self.MyMainFrame.h)
 
         #we set minimum size. we can shrink and expand but it wont go beyond this min size.
-        self.minsize(width=600,height=900)
+
 
         self.columnconfigure(0,weight=1)
         self.rowconfigure(0,weight=1)
@@ -74,6 +75,12 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.destroy()
         print("modification")
         self.mode="modification"
+        self.construction()
+
+    def mode_fire(self):
+        self.MyMainFrame.MyViewFrame.destroy()
+        print("fire")
+        self.mode="fire"
         self.construction()
     
 
