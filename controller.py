@@ -21,7 +21,7 @@ class MyRoot(tk.Tk):
         self.MyMainFrame=None
         
         self.construction()
-        self.minsize(width=600, height=900)
+        self.minsize(width=660, height=900)
     def construction(self):
         
         self.MyMainFrame=v.MyMainFrame(self,mode=self.mode,callbacks=self.callbacks)

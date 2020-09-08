@@ -2,9 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 import widgets_3 as w
 import base_ex as m
+import tkinter.font as tkf
 
-#TODO: update "state" with the new data format in model,
-# and all the loop that goes throught myinfos.data
+
+#TODO: add frame to view pictures
 class MyViewFrame(tk.Frame):
     def __init__(self,parent,mode=None,callbacks=None,*args,**kwargs):
         super().__init__(parent,*args,**kwargs)
@@ -14,7 +15,8 @@ class MyViewFrame(tk.Frame):
         self.LabelsFrame=tk.Frame(self)
         self.EntriesFrame=tk.Frame(self)
 
-        BigTitle=tk.Label(self,text=self.mode,height=1)
+        TitlesFont=tkf.Font(size=15,weight="bold")
+        BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=TitlesFont)
         #BigTitle = tk.Label(self, text="HEHEO", height=1)
         BigTitle.grid(row=0,column=0,sticky="nswe",columnspan=2,rowspan=1)
         
@@ -25,30 +27,30 @@ class MyViewFrame(tk.Frame):
             self.LabelsFrame.columnconfigure(0,weight=1,minsize=100)
             self.EntriesFrame.columnconfigure(0,weight=1,minsize=100)
 
-        counter = 0
+        #counter = 0
         # a reformuler
         if self.mode in ["creation", "modification", "consultation"]:
             for field in m.MyInfos.data.keys():
-                if m.MyInfos.data[field][self.mode] == True:
+                if m.MyInfos.data[field][self.mode]["mode"] == True:
                     x = w.Label_Input(self, mode=self.mode, label=field)
                     # changer en ref to data>type>widget type pour le cas image
                     # self.grid_propagate(0)
-                    x.grid(row=counter, column=0)
+                    x.grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=100)
                     self.inputs[field] = x.MyInput
-                    counter += 1
+                    #counter += 1
         elif self.mode is "fire":
             for field in m.MyInfos.data.keys():
-                if m.MyInfos.data[field][self.mode] == True:
+                if m.MyInfos.data[field][self.mode]["mode"] == True:
                     x = w.Label_Input(self, mode=self.mode, label=field)
                     # changer en ref to data>type>widget type pour le cas image
                     # self.grid_propagate(0)
-                    x.grid(row=counter, column=0)
+                    x.grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=100)
                     self.inputs[field] = x.MyInput
-                    counter += 1
+                    #counter += 1
 
 
         # ButtonsFrame=tk.Frame(self)

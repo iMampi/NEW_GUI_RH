@@ -11,8 +11,8 @@ class Label_Radiobox:
         MyInfo=MyInfos.data.get(label,"Error 404")
         self.var_type = self.field_type[MyInfo["type"]]
          
-#TODO: update state with the new data format
-#TODO : use .et to retrieve dict values
+
+
 #TODO : implement the img downloader annd imge widget displayer
 class Label_Input(tk.Frame):
     #change variable type for image file and tk.Text
@@ -32,7 +32,7 @@ class Label_Input(tk.Frame):
         self.mode=mode
         self.MyInfos=MyInfos
         MyInfo=self.MyInfos.data.get(label,"Error 404")
-        self.var_type = self.field_type[MyInfo["type"]]["type"]
+        self.var_type = self.field_type[MyInfo['type']]["type"]
         input_class=self.field_type[MyInfo["type"]]["input_type"]
         
         #we create a dict that will hold the kwargs for the widgets. so it can be procedural
@@ -42,14 +42,16 @@ class Label_Input(tk.Frame):
         if self.mode=="consultation":
             if input_class==ttk.Combobox:
                 input_class=ttk.Entry
-            
+        if self.mode=="fire":
+            if label in ["Sexe","Etat civil","Département"]:
+                input_class=ttk.Entry
         if self.mode=="creation":
             if MyInfo.get("values",None):
                input_args["values"]=MyInfo.get("values",None)
                
         if input_class==ttk.Entry:
             if self.mode=="fire":
-                input_args["state"] = MyInfo["fire"]
+                input_args["state"] = MyInfo["fire"]["state"]
             elif self.mode=="consultation":
                 input_args["state"] = "readonly"
 
@@ -58,6 +60,8 @@ class Label_Input(tk.Frame):
         if input_class==tk.Text:
             input_args["height"]=4
             label_args["height"]=4
+        #TODO : add the thing for the consultation mode from disabled to normal ,get var, disabled
+
         else:
             input_args["textvariable"]=self.var_type()
 
@@ -72,14 +76,17 @@ class Label_Input(tk.Frame):
         #self.LabelsFrame.rowconfigure(0,weight=1)
         
                 
-        self.MyInput=input_class(self.EntriesFrame,**input_args)
+        self.MyInput = input_class(self.EntriesFrame,**input_args)
         self.MyLabel = tk.Label(self.LabelsFrame,text=label,anchor="ne",**label_args)
+
+
         #self.MyError =
         
                 
     def grid(self,row=None,column=None,sticky="we",**kwargs):
         
         #super().grid(sticky=sticky,**kwargs)
+
         self.MyLabel.grid(row=row,column=column,sticky=sticky,padx=2,pady=2)
         self.MyInput.grid(row=row,column=column,sticky=sticky,padx=2,pady=2)
         #self.MyLabel.columnconfigure(0, weight=1)
@@ -115,17 +122,20 @@ class Label_Input(tk.Frame):
             self.MyInput.insert(0, value)
 
 
-
-
+MyInfos=m.MyInfos
+MyInfo=MyInfos.data.get("Matricule","Error 404")
+var_type = Label_Input.field_type[MyInfo["type"]]["type"]
+print(var_type)
 """
 ##EXAMPLE##
 root=tk.Tk()
-MF=MainFrame(root,width=60)
+MF=tk.Frame(root,width=60)
 MF.grid(row=0,column=0)
 counter=0
 
 for field in m.MyInfos.data.keys():
-    if m.MyInfos.data[field]['creation']==True:
+    print(field)
+    if m.MyInfos.data[field]['creation']['mode']==True:
         x=Label_Input(MF,label=field)
         x.grid(row=counter,column=0)
         root.columnconfigure(0,weight=1)
@@ -144,7 +154,7 @@ for field in m.MyInfos.data.keys():
 #root.columnconfigure(1,weight=1)
 
 root.mainloop()
-    """    
+"""
 
 
         
