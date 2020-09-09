@@ -1,36 +1,189 @@
 import tkinter as tk
 from tkinter import ttk
 import base_ex as m
+import datetime as dt
+from dateutil.relativedelta import relativedelta
+
+
+class ValidateMixin :
+    def __init__(self,*args,error_var=None, **kwargs) :
+        self.error_var = error_var or tk.StringVar()
+        super().__init__(*args, **kwargs)
+        vcmd = self.register(self._validate)
+        invcmd = self.register(self._invalid)
+        self.configure(
+            validate='all',
+            validatecommand=(vcmd,'%P', '%s', '%S', '%V', '%i', '%d'),
+            invalidcommand=(invcmd,'%P', '%s', '%S', '%V', '%i', '%d')
+        )
+
+    def _toggle_error(self,on=False):
+        self.configure(foreground='red' if on==True else 'black')
+
+    def _validate(self, proposed, current, char, event, index, action):
+        self._toggle_error(False)
+        self.error_var.set('')
+        valid=True
+        if event == 'focusout':
+            valid = self._focusout_validate(event=event)
+        elif event == 'key':
+            valid = self._key_validate(proposed=proposed,
+                current=current,
+                char=char,
+                event=event,
+                index=index,
+                action=action)
+        return valid
+
+    def _focusout_validate(self,**kwargs):
+        return True
+
+    def _key_validate(self,**kwargs):
+        return True
+
+    def _invalid(self,proposed, current, char, event, index, action):
+        if event == 'focusout':
+            self._focusout_invalid(event=event)
+        elif event =='key':
+            self._key_invalid(proposed=proposed,
+                current=current,
+                char=char,
+                event=event,
+                index=index,
+                action=action)
+
+    def _focusout_invalid(self,**kwargs):
+        self._toggle_error(on=True)
+        print("focus out invalid : active")
+
+    def _key_invalid(self,**kwargs):
+        pass
+
+    def trigger_focusout(self):
+        valid=self._validate('','','',"focusout",'','')
+        if not valid:
+            self._focusout_invalid(event='focusout')
+        return valid
+
+class ValidEntry(ValidateMixin,ttk.Entry):
+    def _focusout_validate(self,event):
+        valid=True
+        if not self.get():
+            valid=False
+            self.error_var.set('Veuillez compléter.')
+        return valid
+
+#todo mmake a better key valid for dates - months and days
+class ValidDate(ValidateMixin,ttk.Entry):
+    def _focusout_validate(self, event):
+        valid = True
+        if not self.get():
+            valid = False
+            self.error_var.set('Veuillez compléter.')
+        try:
+            dt.datetime.strptime(self.get(),"%d/%m/%Y")
+        except ValueError:
+            self.error_var.set('Date non valide.')
+            valid=False
+
+        return valid
+
+    def _key_validate(self,action,index,char,**kwargs):
+        valid = True
+        if action=='0':
+            valid=True
+        elif index in ('0','1','3','4','6','7','8','9'):
+            valid=char.isdigit()
+        elif index in ('2','5'):
+            valid= char=='/'
+        else:
+            valid=False
+        return valid
+
+class ValidAge(ValidDate):
+    def _focusout_validate(self, event):
+        valid = True
+        if not self.get():
+            valid = False
+            self.error_var.set('Veuillez compléter.')
+        try:
+            bd=dt.datetime.strptime(self.get(), "%d/%m/%Y")
+            age = relativedelta(dt.datetime.today(), bd)
+            if age.years < 18:
+                valid = False
+                self.error_var.set('Employé mineur.')
+        except ValueError:
+            self.error_var.set('Date non valide.')
+            valid = False
+        return valid
+
+    def _key_validate(self, action, index, char, **kwargs):
+        valid = True
+        if action == '0':
+            valid = True
+        elif index in ('0', '1', '3', '4', '6', '7', '8', '9'):
+            valid = char.isdigit()
+        elif index in ('2', '5'):
+            valid = char == '/'
+        else:
+            valid = False
+        return valid
+
+#FIXME arranger ValidCombobox
+class ValidCombobox(ValidateMixin,ttk.Combobox):
+    def _focusout_validate(self, event):
+        valid = True
+        if not self.get():
+            valid = False
+            self.error_var.set('Veuillez compléter.')
+        if self.get() not in self.cget('values'):
+            self.error_var.set('Ne fais pas partie de la liste.')
+        return valid
+
+    def _key_validate(self,proposed, action, **kwargs):
+        valid = True
+        if action == '0':
+            self.set('')
+            return True
+        myvalues=self.cget('values')
+        matching =[x for x in myvalues
+                   if x.lower().startswith(proposed.lower())]
+        if len(matching)==0:
+            valid=False
+        elif len(matching)==1:
+            self.set(matching[0])
+            self.icursor(tk.END)
+            valid=False
+        return valid
 
 
 
 
-class Label_Radiobox:
-    def __init__(self,parent,label=None,MyInfos=None):
-        self.label = label
-        MyInfo=MyInfos.data.get(label,"Error 404")
-        self.var_type = self.field_type[MyInfo["type"]]
          
-
-
+#TODO : implémenter les dialogbox
+#TODO : intégrer les messages d'erreur dde validation
+#TODO : intégrer les mmethode de validation
 #TODO : implement the img downloader annd imge widget displayer
-class Label_Input(tk.Frame):
+class LabelInput(tk.Frame):
     #change variable type for image file and tk.Text
+    #FIXME remettre tous les input_type à la normal
     field_type ={
-        m.FieldTypes.string :{"type":tk.StringVar,"input_type":ttk.Entry},
-        m.FieldTypes.string_list : {"type":tk.StringVar,"input_type":ttk.Combobox},
-        m.FieldTypes.iso_date_string : {"type":tk.StringVar,"input_type":ttk.Entry},
+        m.FieldTypes.string :{"type":tk.StringVar,"input_type":ValidEntry},
+        m.FieldTypes.string_list : {"type":tk.StringVar,"input_type":ValidCombobox},
+        m.FieldTypes.iso_date_string : {"type":tk.StringVar,"input_type":ValidDate},
+        m.FieldTypes.iso_date_age_string : {"type":tk.StringVar,"input_type":ValidAge},
         m.FieldTypes.string_long : {"type":tk.StringVar,"input_type":tk.Text},
-        m.FieldTypes.decimal : {"type":tk.DoubleVar,"input_type":ttk.Entry},
-        m.FieldTypes.integer : {"type":tk.IntVar,"input_type":ttk.Entry},
-        m.FieldTypes.boolean : {"type":tk.BooleanVar,"input_type":ttk.Entry},
-        m.FieldTypes.image_file : {"type":tk.StringVar,"input_type":ttk.Entry}
+        m.FieldTypes.decimal : {"type":tk.DoubleVar,"input_type":ValidEntry},
+        m.FieldTypes.integer : {"type":tk.IntVar,"input_type":ValidEntry},
+        m.FieldTypes.boolean : {"type":tk.BooleanVar,"input_type":ValidEntry},
+        m.FieldTypes.image_file : {"type":tk.StringVar,"input_type":ValidEntry}
         }
     
-    def __init__(self,parent,mode=None,label=None, MyInfos=m.MyInfos,**kwargs):
+    def __init__(self,parent,mode=None,label=None, MyInfos=m.MyInfos, **kwargs):
         super().__init__(parent,**kwargs)
         self.mode=mode
         self.MyInfos=MyInfos
+
         MyInfo=self.MyInfos.data.get(label,"Error 404")
         self.var_type = self.field_type[MyInfo['type']]["type"]
         input_class=self.field_type[MyInfo["type"]]["input_type"]
@@ -39,17 +192,18 @@ class Label_Input(tk.Frame):
         #mieux structutrer les if avec les changements de mode
         input_args={}
         label_args={}
-        if self.mode=="consultation":
-            if input_class==ttk.Combobox:
-                input_class=ttk.Entry
-        if self.mode=="fire":
-            if label in ["Sexe","Etat civil","Département"]:
-                input_class=ttk.Entry
         if self.mode=="creation":
             if MyInfo.get("values",None):
                input_args["values"]=MyInfo.get("values",None)
-               
-        if input_class==ttk.Entry:
+        if self.mode=="consultation":
+            if input_class in (ttk.Combobox, ValidCombobox):
+                input_class=ValidEntry
+
+        if self.mode=="fire":
+            if label in ["Sexe","Etat civil","Département"]:
+                input_class=ValidEntry
+
+        if input_class in (ValidEntry,ValidDate,ValidAge):
             if self.mode=="fire":
                 input_args["state"] = MyInfo["fire"]["state"]
             elif self.mode=="consultation":
@@ -60,7 +214,12 @@ class Label_Input(tk.Frame):
         if input_class==tk.Text:
             input_args["height"]=4
             label_args["height"]=4
-        #TODO : add the thing for the consultation mode from disabled to normal ,get var, disabled
+            if self.mode=="consultation":
+                input_args["state"] = "disabled"
+                input_args["background"] = 'light grey'
+
+        #TODO : add the thing for the consultation mode
+        # from disabled to normal ,get var,set var, disabled for tk.Text
 
         else:
             input_args["textvariable"]=self.var_type()
@@ -71,15 +230,19 @@ class Label_Input(tk.Frame):
 
         self.LabelsFrame=parent.LabelsFrame
         self.EntriesFrame=parent.EntriesFrame
+
         
         #self.LabelsFrame.rowconfigure(0,weight=1)
         #self.LabelsFrame.rowconfigure(0,weight=1)
         
                 
-        self.MyInput = input_class(self.EntriesFrame,**input_args)
+        self.MyInput = input_class(self.EntriesFrame,**input_args,**kwargs)
+        self.error_var = tk.StringVar() or self.MyInput.error_var()
         self.MyLabel = tk.Label(self.LabelsFrame,text=label,anchor="ne",**label_args)
+        self.ErrorLabel = tk.Label(self.EntriesFrame, textvariable=self.error_var)
 
-
+        if input_class==tk.Text:
+            print(f"state of tk.Text : {self.MyInput.cget('state')}")
         #self.MyError =
         
                 
@@ -89,6 +252,7 @@ class Label_Input(tk.Frame):
 
         self.MyLabel.grid(row=row,column=column,sticky=sticky,padx=2,pady=2)
         self.MyInput.grid(row=row,column=column,sticky=sticky,padx=2,pady=2)
+        self.ErrorLabel.grid(row=row,column=column+1,sticky=sticky,padx=2,pady=2)
         #self.MyLabel.columnconfigure(0, weight=1)
         #self.MyInput.columnconfigure(0, weight=1)
         
@@ -124,15 +288,28 @@ class Label_Input(tk.Frame):
 
 MyInfos=m.MyInfos
 MyInfo=MyInfos.data.get("Matricule","Error 404")
-var_type = Label_Input.field_type[MyInfo["type"]]["type"]
+var_type = LabelInput.field_type[MyInfo["type"]]["type"]
 print(var_type)
+
 """
 ##EXAMPLE##
 root=tk.Tk()
 MF=tk.Frame(root,width=60)
 MF.grid(row=0,column=0)
 counter=0
+lab=tk.Label(root)
+lab.grid(row=0,column=0)
+labb=tk.Label(root)
+labb.grid(row=1,column=0)
+e=ValidAge(root,foreground="blue")
+e.grid(row=0,column=1)
 
+ee=ValidEntry(root,foreground="blue")
+ee.grid(row=1,column=1)
+lab.configure(textvariable=e.error_var)
+labb.configure(textvariable=ee.error_var)
+
+""""""
 for field in m.MyInfos.data.keys():
     print(field)
     if m.MyInfos.data[field]['creation']['mode']==True:
@@ -141,7 +318,7 @@ for field in m.MyInfos.data.keys():
         root.columnconfigure(0,weight=1)
         root.columnconfigure(1,weight=1)
         counter+=1
-        
+""""""
         
 #x=Label_Input(MF,label="Noms")
 #y=Label_Input(MF,label="Sexe")
@@ -155,6 +332,7 @@ for field in m.MyInfos.data.keys():
 
 root.mainloop()
 """
+
 
 
         

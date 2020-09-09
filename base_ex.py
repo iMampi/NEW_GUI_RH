@@ -9,7 +9,8 @@ class FieldTypes:
     decimal = 5
     integer = 6
     boolean = 7
-    image_file =8
+    image_file = 8
+    iso_date_age_string = 9
 
 
 class MyLists:
@@ -55,7 +56,7 @@ class MyInfos:
                              "consultation":{"mode":True,"row":3},
                              "modification":{"mode":True,"row":3},
                              "fire":{"mode":True,"row":6,"state":"readonly"},
-                             "type":FieldTypes.string
+                             "type":FieldTypes.iso_date_age_string
                              },
         "Lieu de naissance":{"creation":{"mode":True,"row":4},
                              "consultation":{"mode":True,"row":4},
@@ -63,158 +64,152 @@ class MyInfos:
                              "fire":{"mode":True,"row":7,"state":"readonly"},
                              "type":FieldTypes.string
                              },
-        "Date de naissance":{"creation":{"mode":True,"row":5},
-                             "consultation":{"mode":True,"row":5},
-                             "modification":{"mode":True,"row":5},
-                             "fire":{"mode":True,"row":8,"state":"readonly"},
-                             "type":FieldTypes.string
-                             },
-        "Sexe":{"creation":{"mode":True,"row":6},
-                "consultation":{"mode":True,"row":6},
-                "modification":{"mode":True,"row":6},
-                "fire":{"mode":True,"row":9,"state":"readonly"},
+        "Sexe":{"creation":{"mode":True,"row":5},
+                "consultation":{"mode":True,"row":5},
+                "modification":{"mode":True,"row":5},
+                "fire":{"mode":True,"row":8,"state":"readonly"},
                 "type": FieldTypes.string_list,
                 "values":MyLists.sexe_list
                 },
-        "CIN":{"creation":{"mode":True,"row":7},
-               "consultation":{"mode":True,"row":7},
-               "modification":{"mode":True,"row":7},
-               "fire":{"mode":True,"row":10,"state":"readonly"},
+        "CIN":{"creation":{"mode":True,"row":6},
+               "consultation":{"mode":True,"row":6},
+               "modification":{"mode":True,"row":6},
+               "fire":{"mode":True,"row":9,"state":"readonly"},
                "type":FieldTypes.string
                },
-        "Date de délivrance":{"creation":{"mode":True,"row":8},
+        "Date de délivrance":{"creation":{"mode":True,"row":7},
+                              "consultation":{"mode":True,"row":7},
+                              "modification":{"mode":True,"row":7},
+                              "fire":{"mode":True,"row":10,"state":"readonly"},
+                              "type":FieldTypes.iso_date_string
+                              },
+        "Lieu de délivrance":{"creation":{"mode":True,"row":8},
                               "consultation":{"mode":True,"row":8},
                               "modification":{"mode":True,"row":8},
                               "fire":{"mode":True,"row":11,"state":"readonly"},
                               "type":FieldTypes.string
                               },
-        "Lieu de délivrance":{"creation":{"mode":True,"row":9},
-                              "consultation":{"mode":True,"row":9},
-                              "modification":{"mode":True,"row":9},
-                              "fire":{"mode":True,"row":12,"state":"readonly"},
-                              "type":FieldTypes.string
-                              },
-        "Adresse Réel":{"creation":{"mode":True,"row":10},
-                        "consultation":{"mode":True,"row":10},
-                        "modification":{"mode":True,"row":10},
-                        "fire":{"mode":True,"row":13,"state":"readonly"},
+        "Adresse Réel":{"creation":{"mode":True,"row":9},
+                        "consultation":{"mode":True,"row":9},
+                        "modification":{"mode":True,"row":9},
+                        "fire":{"mode":True,"row":12,"state":"readonly"},
                         "type":FieldTypes.string
                         },
-        "Adresse Administrtive":{"creation":{"mode":True,"row":11},
-                                 "consultation":{"mode":True,"row":11},
-                                 "modification":{"mode":True,"row":11},
-                                 "fire":{"mode":True,"row":14,"state":"readonly"},
+        "Adresse Administrtive":{"creation":{"mode":True,"row":10},
+                                 "consultation":{"mode":True,"row":10},
+                                 "modification":{"mode":True,"row":10},
+                                 "fire":{"mode":True,"row":13,"state":"readonly"},
                                  "type":FieldTypes.string
                                  },
-        "Téléphone 01":{"creation":{"mode":True,"row":12},
+        "Téléphone 01":{"creation":{"mode":True,"row":11},
+                        "consultation":{"mode":True,"row":11},
+                        "modification":{"mode":True,"row":11},
+                        "fire":{"mode":True,"row":14,"state":"readonly"},
+                        "type":FieldTypes.string
+                        },
+        "Téléphone 02":{"creation":{"mode":True,"row":12},
                         "consultation":{"mode":True,"row":12},
                         "modification":{"mode":True,"row":12},
                         "fire":{"mode":True,"row":15,"state":"readonly"},
                         "type":FieldTypes.string
                         },
-        "Téléphone 02":{"creation":{"mode":True,"row":13},
+        "Email perso":{"creation":{"mode":True,"row":13},
                         "consultation":{"mode":True,"row":13},
                         "modification":{"mode":True,"row":13},
                         "fire":{"mode":True,"row":16,"state":"readonly"},
                         "type":FieldTypes.string
                         },
-        "Email perso":{"creation":{"mode":True,"row":14},
-                        "consultation":{"mode":True,"row":14},
-                        "modification":{"mode":True,"row":14},
-                        "fire":{"mode":True,"row":17,"state":"readonly"},
-                        "type":FieldTypes.string
-                        },
-        "Etat civil":{"creation":{"mode":True,"row":15},
-                      "consultation":{"mode":True,"row":15},
-                      "modification":{"mode":True,"row":15},
-                      "fire":{"mode":True,"row":18,"state":"readonly"},
+        "Etat civil":{"creation":{"mode":True,"row":14},
+                      "consultation":{"mode":True,"row":14},
+                      "modification":{"mode":True,"row":14},
+                      "fire":{"mode":True,"row":17,"state":"readonly"},
                       "type":FieldTypes.string_list,
                       "values":MyLists.etat_civil_list
                       },
-        "Nombre d'enfants":{"creation":{"mode":True,"row":16},
-                            "consultation":{"mode":True,"row":16},
-                            "modification":{"mode":True,"row":16},
-                            "fire":{"mode":True,"row":19,"state":"readonly"},
+        "Nombre d'enfants":{"creation":{"mode":True,"row":15},
+                            "consultation":{"mode":True,"row":15},
+                            "modification":{"mode":True,"row":15},
+                            "fire":{"mode":True,"row":18,"state":"readonly"},
                             "type":FieldTypes.integer
                             },
-        "N° CNAPS":{"creation":{"mode":True,"row":17},
+        "N° CNAPS":{"creation":{"mode":True,"row":16},
+                "consultation":{"mode":True,"row":16},
+                "modification":{"mode":True,"row":16},
+                "fire":{"mode":True,"row":19,"state":"readonly"},
+                    "type":FieldTypes.string
+                    },
+        "Date de début":{"creation":{"mode":True,"row":17},
                 "consultation":{"mode":True,"row":17},
                 "modification":{"mode":True,"row":17},
                 "fire":{"mode":True,"row":20,"state":"readonly"},
-                    "type":FieldTypes.string
-                    },
-        "Date de début":{"creation":{"mode":True,"row":18},
+                         "type":FieldTypes.iso_date_string
+                         },
+        "Salaire de base":{"creation":{"mode":True,"row":18},
                 "consultation":{"mode":True,"row":18},
                 "modification":{"mode":True,"row":18},
                 "fire":{"mode":True,"row":21,"state":"readonly"},
-                         "type":FieldTypes.string
-                         },
-        "Salaire de base":{"creation":{"mode":True,"row":19},
+                           "type":FieldTypes.decimal
+                           },
+        "Email pro":{"creation":{"mode":True,"row":19},
                 "consultation":{"mode":True,"row":19},
                 "modification":{"mode":True,"row":19},
                 "fire":{"mode":True,"row":22,"state":"readonly"},
-                           "type":FieldTypes.decimal
-                           },
-        "Email pro":{"creation":{"mode":True,"row":20},
+                     "type":FieldTypes.string
+                     },
+        "Poste":{"creation":{"mode":True,"row":20},
                 "consultation":{"mode":True,"row":20},
                 "modification":{"mode":True,"row":20},
                 "fire":{"mode":True,"row":23,"state":"readonly"},
-                     "type":FieldTypes.string
-                     },
-        "Poste":{"creation":{"mode":True,"row":21},
+                 "type":FieldTypes.string
+                 },
+        "Département":{"creation":{"mode":True,"row":21},
                 "consultation":{"mode":True,"row":21},
                 "modification":{"mode":True,"row":21},
                 "fire":{"mode":True,"row":24,"state":"readonly"},
-                 "type":FieldTypes.string
-                 },
-        "Département":{"creation":{"mode":True,"row":22},
-                "consultation":{"mode":True,"row":22},
-                "modification":{"mode":True,"row":22},
-                "fire":{"mode":True,"row":25,"state":"readonly"},
                        "type":FieldTypes.string_list,
                        "values":MyLists.departement_list
                        },
-        "Solde congés disponibles":{"creation":{"mode":True,"row":23},
+        "Solde congés disponibles":{"creation":{"mode":True,"row":22},
+                "consultation":{"mode":True,"row":22},
+                "modification":{"mode":True,"row":22},
+                "fire":{"mode":True,"row":25,"state":"readonly"},
+                                  "type":FieldTypes.decimal
+                                  },
+        "Congés consommés":{"creation":{"mode":True,"row":23},
                 "consultation":{"mode":True,"row":23},
                 "modification":{"mode":True,"row":23},
                 "fire":{"mode":True,"row":26,"state":"readonly"},
-                                  "type":FieldTypes.decimal
-                                  },
-        "Congés consommés":{"creation":{"mode":True,"row":24},
-                "consultation":{"mode":True,"row":24},
-                "modification":{"mode":True,"row":24},
-                "fire":{"mode":True,"row":27,"state":"readonly"},
                             "type":FieldTypes.decimal
                             },
-        "Date fin":{"creation":{"mode":True,"row":25},
+        "Date fin":{"creation":{"mode":True,"row":24},
+                "consultation":{"mode":True,"row":24},
+                "modification":{"mode":True,"row":24},
+                "fire":{"mode":True,"row":0,"state":"normal"},
+                    "type":FieldTypes.iso_date_string
+                    },
+        "Motif fin de contrat":{"creation":{"mode":True,"row":25},
                 "consultation":{"mode":True,"row":25},
                 "modification":{"mode":True,"row":25},
-                "fire":{"mode":True,"row":0,"state":"normal"},
-                    "type":FieldTypes.string
-                    },
-        "Motif fin de contrat":{"creation":{"mode":True,"row":26},
-                "consultation":{"mode":True,"row":26},
-                "modification":{"mode":True,"row":26},
                 "fire":{"mode":True,"row":1,"state":"normal"},
                                 "type":FieldTypes.string_list,
                                 "values":MyLists.motif_fin_list
                                 },
-        "Note":{"creation":{"mode":True,"row":27},
-                "consultation":{"mode":True,"row":27},
-                "modification":{"mode":True,"row":27},
+        "Note":{"creation":{"mode":True,"row":26},
+                "consultation":{"mode":True,"row":26},
+                "modification":{"mode":True,"row":26},
                 "fire":{"mode":True,"row":2,"state":"normal"},
                 "type":FieldTypes.string_long
                 },
-        "Image CIN":{"creation":{"mode":True,"row":28},
+        "Image CIN":{"creation":{"mode":True,"row":27},
+                "consultation":{"mode":True,"row":27},
+                "modification":{"mode":True,"row":27},
+                "fire":{"mode":True,"row":27,"state":"readonly"},
+                     "type":FieldTypes.image_file
+                     },
+        "Photo de l'employé":{"creation":{"mode":True,"row":28},
                 "consultation":{"mode":True,"row":28},
                 "modification":{"mode":True,"row":28},
                 "fire":{"mode":True,"row":28,"state":"readonly"},
-                     "type":FieldTypes.image_file
-                     },
-        "Photo de l'employé":{"creation":{"mode":True,"row":29},
-                "consultation":{"mode":True,"row":29},
-                "modification":{"mode":True,"row":29},
-                "fire":{"mode":True,"row":29,"state":"readonly"},
                               "type":FieldTypes.image_file
                               }
         }

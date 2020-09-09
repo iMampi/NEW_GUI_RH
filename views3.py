@@ -4,21 +4,22 @@ import widgets_3 as w
 import base_ex as m
 import tkinter.font as tkf
 
-
 #TODO: add frame to view pictures
-class MyViewFrame(tk.Frame):
-    def __init__(self,parent,mode=None,callbacks=None,*args,**kwargs):
-        super().__init__(parent,*args,**kwargs)
-        self.mode=mode
-        self.inputs={}
-        self.callbacks=callbacks
-        self.LabelsFrame=tk.Frame(self)
-        self.EntriesFrame=tk.Frame(self)
 
-        TitlesFont=tkf.Font(size=15,weight="bold")
-        BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=TitlesFont)
-        #BigTitle = tk.Label(self, text="HEHEO", height=1)
-        BigTitle.grid(row=0,column=0,sticky="nswe",columnspan=2,rowspan=1)
+
+class MyViewFrame(tk.Frame):
+    def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+        self.mode = mode
+        self.inputs = {}
+        self.callbacks = callbacks
+        self.LabelsFrame = tk.Frame(self)
+        self.EntriesFrame = tk.Frame(self)
+
+
+        titles_font = tkf.Font(size=15, weight="bold")
+        BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=titles_font)
+        BigTitle.grid(row=0, column=0, sticky="nswe", columnspan=2, rowspan=1)
         
         if mode:
             #self.LabelsFrame.grid_propagate(False)
@@ -32,7 +33,7 @@ class MyViewFrame(tk.Frame):
         if self.mode in ["creation", "modification", "consultation"]:
             for field in m.MyInfos.data.keys():
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
-                    x = w.Label_Input(self, mode=self.mode, label=field)
+                    x = w.LabelInput(self, mode=self.mode, label=field)
                     # changer en ref to data>type>widget type pour le cas image
                     # self.grid_propagate(0)
                     x.grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
@@ -43,7 +44,7 @@ class MyViewFrame(tk.Frame):
         elif self.mode is "fire":
             for field in m.MyInfos.data.keys():
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
-                    x = w.Label_Input(self, mode=self.mode, label=field)
+                    x = w.LabelInput(self, mode=self.mode, label=field)
                     # changer en ref to data>type>widget type pour le cas image
                     # self.grid_propagate(0)
                     x.grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
@@ -53,36 +54,6 @@ class MyViewFrame(tk.Frame):
                     #counter += 1
 
 
-        # ButtonsFrame=tk.Frame(self)
-        # ButtonsFrame.grid(row=2, column=0, sticky="we", columnspan=2)
-        # button_counter=0
-        # #add cllback for bottom buttons later
-        # for button in m.MyActionButtons.data.keys():
-        #     try:
-        #         if m.MyActionButtons.data[button][self.mode]:
-        #             bt=ttk.Button(
-        #                 ButtonsFrame,
-        #                 text=button,
-        #                 )
-        #             bt.grid(row=0, column=button_counter, sticky="nswe",columnspan=1,padx=2,pady=2)
-        #             ButtonsFrame.columnconfigure(button_counter, weight=1)
-        #             button_counter += 1
-        #     except:
-        #         print("case of mode 'None'")
-        #         pass
-
-        
-        
-        #self.columnconfigure(0,weight=1)
-        #self.columnconfigure(1,weight=1)
-        
-
-
-        #self.columnconfigure(0,weight=1,minsize=20)
-        #self.columnconfigure(1,weight=1,minsize=20)
-
-        
-        
     def grid(self,**kwargs):
         super().grid(**kwargs)
 
