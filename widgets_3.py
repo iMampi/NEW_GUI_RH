@@ -187,7 +187,9 @@ class LabelInput(tk.Frame):
         MyInfo=self.MyInfos.data.get(label,"Error 404")
         self.var_type = self.field_type[MyInfo['type']]["type"]
         input_class=self.field_type[MyInfo["type"]]["input_type"]
-        
+
+
+
         #we create a dict that will hold the kwargs for the widgets. so it can be procedural
         #mieux structutrer les if avec les changements de mode
         input_args={}
@@ -237,7 +239,10 @@ class LabelInput(tk.Frame):
         
                 
         self.MyInput = input_class(self.EntriesFrame,**input_args,**kwargs)
-        self.error_var = tk.StringVar() or self.MyInput.error_var()
+        if input_class != tk.Text:
+            self.error_var = self.MyInput.error_var
+        else:
+            self.error_var = tk.StringVar(value='')
         self.MyLabel = tk.Label(self.LabelsFrame,text=label,anchor="ne",**label_args)
         self.ErrorLabel = tk.Label(self.EntriesFrame, textvariable=self.error_var)
 

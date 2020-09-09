@@ -26,7 +26,8 @@ class MyViewFrame(tk.Frame):
             self.LabelsFrame.grid(row=1,column=0,sticky="nswe")
             self.EntriesFrame.grid(row=1,column=1,sticky="nswe")
             self.LabelsFrame.columnconfigure(0,weight=1,minsize=100)
-            self.EntriesFrame.columnconfigure(0,weight=1,minsize=100)
+            self.EntriesFrame.columnconfigure(0,weight=1,minsize=150)
+            self.EntriesFrame.columnconfigure(1, weight=1, minsize=100)
 
         #counter = 0
         # a reformuler
@@ -38,7 +39,7 @@ class MyViewFrame(tk.Frame):
                     # self.grid_propagate(0)
                     x.grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
-                    self.columnconfigure(1, weight=1,minsize=100)
+                    self.columnconfigure(1, weight=1,minsize=150)
                     self.inputs[field] = x.MyInput
                     #counter += 1
         elif self.mode is "fire":
