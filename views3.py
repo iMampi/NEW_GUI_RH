@@ -65,6 +65,7 @@ class MyViewFrame(tk.Frame):
     def get(self):
         data={}
         for key,widget in self.inputs.items():
+            print(key)
             data[key]=widget.get()
         print("data from get :")
         print(data)

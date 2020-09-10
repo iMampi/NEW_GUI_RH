@@ -215,6 +215,7 @@ class LabelInput(tk.Frame):
         if input_class==tk.Text:
             input_args["height"]=4
             label_args["height"]=4
+            #self.var_type=None
             if self.mode=="consultation":
                 input_args["state"] = "disabled"
                 input_args["background"] = 'light grey'
@@ -262,10 +263,11 @@ class LabelInput(tk.Frame):
         
     def get(self):
         try:
-            if self.var_type:
-                return self.var_type.get()
-            elif self.field_type[MyInfo["type"]]["input_type"] == tk.Text:
+
+            if type(self.MyInput) == tk.Text:
                 return self.MyInput.get('1.0', tk.END)
+            elif self.var_type:
+               return self.var_type.get()
             else:
                 return self.MyInput.get()
         except (TypeError, tk.TclError):

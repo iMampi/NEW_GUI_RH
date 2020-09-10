@@ -27,14 +27,13 @@ class MyTitles:
           "fire":"DEPART D'UN EMPLOYE"
     }
     #todo corriger les champs a afficher en fonction du mode
-    #todo trouver un moyen de retiré "404" des champs lors de l'export csv
 class MyInfos:
     data={
         "Error 404":{"csvheader":False,
-                     "creation":{"mode":"404","row":30},
-                     "consultation":{"mode":"404","row":30},
-                     "modification":{"mode":"404","row":30},
-                     "fire":{"mode":"404","row":30,"state":"normal"},
+                     "creation":{"mode":False,"row":30},
+                     "consultation":{"mode":False,"row":30},
+                     "modification":{"mode":False,"row":30},
+                     "fire":{"mode":False,"row":30,"state":"normal"},
                      "type":FieldTypes.string
                      },
         "Matricule":{"csvheader":True,
@@ -195,31 +194,31 @@ class MyInfos:
                        "values":MyLists.departement_list
                        },
         "Solde congés disponibles":{"csvheader":True,
-            "creation":{"mode":True,"row":22},
-                "consultation":{"mode":True,"row":22},
-                "modification":{"mode":True,"row":22},
-                "fire":{"mode":True,"row":25,"state":"readonly"},
+                                    "creation":{"mode":False,"row":22},
+                                    "consultation":{"mode":True,"row":22},
+                                    "modification":{"mode":True,"row":22},
+                                    "fire":{"mode":True,"row":25,"state":"readonly"},
                                   "type":FieldTypes.decimal
                                   },
         "Congés consommés":{"csvheader":True,
-            "creation":{"mode":True,"row":23},
+            "creation":{"mode":False,"row":23},
                 "consultation":{"mode":True,"row":23},
                 "modification":{"mode":True,"row":23},
                 "fire":{"mode":True,"row":26,"state":"readonly"},
                             "type":FieldTypes.decimal
                             },
         "Date fin":{"csvheader":True,
-                    "creation":{"mode":True,"row":24},
+                    "creation":{"mode":False,"row":24},
                     "consultation":{"mode":True,"row":24},
                     "modification":{"mode":True,"row":24},
                     "fire":{"mode":True,"row":0,"state":"normal"},
                     "type":FieldTypes.iso_date_string
                     },
         "Motif fin de contrat":{"csvheader":True,
-            "creation":{"mode":True,"row":25},
-                "consultation":{"mode":True,"row":25},
-                "modification":{"mode":True,"row":25},
-                "fire":{"mode":True,"row":1,"state":"normal"},
+                                "creation":{"mode":False,"row":25},
+                                "consultation":{"mode":True,"row":25},
+                                "modification":{"mode":True,"row":25},
+                                "fire":{"mode":True,"row":1,"state":"normal"},
                                 "type":FieldTypes.string_list,
                                 "values":MyLists.motif_fin_list
                                 },
@@ -252,11 +251,14 @@ class MyInfos:
 
     def save_record(self, data, rownum=None):
         newfile= not os.path.exists(self.filename)
-        headers=[x for x in self.data.keys() if self.data[x]['csvheader']]
+
         if rownum==None:
             #saving a new entry
             with open(self.filename, 'a') as fh:
-                csvwriter = csv.DictWriter(fh,fieldnames=headers,delimiter=";")
+                csvwriter = csv.DictWriter(fh,
+                                           fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
+                                           delimiter=";"
+                                           )
                 if newfile:
                     csvwriter.writeheader()
                 csvwriter.writerow(data)
