@@ -155,7 +155,33 @@ class ValidCombobox(ValidateMixin,ttk.Combobox):
             self.icursor(tk.END)
             valid=False
         return valid
+    
+class ValidMail(ValidateMixin,ttk.Entry):
+    def _focusout_validate(self,event):
+        valid=True
+        if not self.get():
+            valid=False
+            self.error_var.set('Veuillez compléter.')
+        elif not all(("@" in self.get(),
+                  any((x in tv for x in (".com",".org",".mg",'.uk','.fr','.us','.jp'))))
+                      )
+            valid=False
+            self.error_var.set('Mail non valide.')
+        return valid
 
+class ValidPhone(ValidateMixin,ttk.Entry):
+    def _focusout_validate(self,event):
+        valid=True
+        if not self.get():
+            valid=False
+            self.error_var.set('Veuillez compléter.')
+        elif not all((self.get().isdigit(),len(self.get())=10)):
+            valid = False
+            self.error_var.set('Numéro non valide.')
+        elif not any((self.get().startswith(x) for x in ('034','033','032')):
+            valid = False
+            self.error_var.set('Numéro non valide.')
+        return valid
 
 
 
@@ -175,7 +201,9 @@ class LabelInput(tk.Frame):
         m.FieldTypes.decimal : {"type":tk.DoubleVar,"input_type":ValidEntry},
         m.FieldTypes.integer : {"type":tk.IntVar,"input_type":ValidEntry},
         m.FieldTypes.boolean : {"type":tk.BooleanVar,"input_type":ValidEntry},
-        m.FieldTypes.image_file : {"type":tk.StringVar,"input_type":ValidEntry}
+        m.FieldTypes.image_file : {"type":tk.StringVar,"input_type":ValidEntry},
+        m.FieldTypes.string_mail: {"type": tk.StringVar, "input_type": ValidMail},
+        m.FieldTypes.string_phone: {"type": tk.StringVar, "input_type": ValidPhone}
         }
     
     def __init__(self,parent,mode=None,label=None, MyInfos=m.MyInfos, **kwargs):

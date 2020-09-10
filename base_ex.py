@@ -11,6 +11,8 @@ class FieldTypes:
     boolean = 7
     image_file = 8
     iso_date_age_string = 9
+    string_mail = 10
+    string_phone = 11
 
 
 class MyLists:
@@ -119,21 +121,21 @@ class MyInfos:
                         "consultation":{"mode":True,"row":11},
                         "modification":{"mode":True,"row":11},
                         "fire":{"mode":True,"row":14,"state":"readonly"},
-                        "type":FieldTypes.string
+                        "type":FieldTypes.string_phone
                         },
         "Téléphone 02":{"csvheader":True,
             "creation":{"mode":True,"row":12},
                         "consultation":{"mode":True,"row":12},
                         "modification":{"mode":True,"row":12},
                         "fire":{"mode":True,"row":15,"state":"readonly"},
-                        "type":FieldTypes.string
+                        "type":FieldTypes.string_phone
                         },
         "Email perso":{"csvheader":True,
             "creation":{"mode":True,"row":13},
                         "consultation":{"mode":True,"row":13},
                         "modification":{"mode":True,"row":13},
                         "fire":{"mode":True,"row":16,"state":"readonly"},
-                        "type":FieldTypes.string
+                        "type":FieldTypes.string_mail
                         },
         "Etat civil":{"csvheader":True,
                       "creation":{"mode":True,"row":14},
@@ -176,7 +178,7 @@ class MyInfos:
                 "consultation":{"mode":True,"row":19},
                 "modification":{"mode":True,"row":19},
                 "fire":{"mode":True,"row":22,"state":"readonly"},
-                     "type":FieldTypes.string
+                     "type":FieldTypes.string_mail
                      },
         "Poste":{"csvheader":True,
             "creation":{"mode":True,"row":20},
