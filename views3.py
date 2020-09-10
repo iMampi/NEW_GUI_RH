@@ -5,7 +5,7 @@ import base_ex as m
 import tkinter.font as tkf
 
 #TODO: add frame to view pictures
-
+#todo: fix this the dict of self.inputs
 
 class MyViewFrame(tk.Frame):
     def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
@@ -34,13 +34,15 @@ class MyViewFrame(tk.Frame):
         if self.mode in ["creation", "modification", "consultation"]:
             for field in m.MyInfos.data.keys():
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
-                    x = w.LabelInput(self, mode=self.mode, label=field)
+                    self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
                     # changer en ref to data>type>widget type pour le cas image
                     # self.grid_propagate(0)
-                    x.grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
+                    self.inputs[field].grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=150)
-                    self.inputs[field] = x.MyInput
+                    #self.inputs[field] = x.MyInput
+                    #print("x.MyInput :", end="")
+                    #print(x.MyInput)
                     #counter += 1
         elif self.mode is "fire":
             for field in m.MyInfos.data.keys():
@@ -52,7 +54,9 @@ class MyViewFrame(tk.Frame):
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=100)
                     self.inputs[field] = x.MyInput
+
                     #counter += 1
+        print(self.inputs)
 
 
     def grid(self,**kwargs):
@@ -60,8 +64,14 @@ class MyViewFrame(tk.Frame):
 
     def get(self):
         data={}
-        for key,widget in self.inputs:
-            data['key']=widget.get()
+        for key,widget in self.inputs.items():
+            data[key]=widget.get()
+        print("data from get :")
+        print(data)
+        return data
+
+    def set(self):
+        pass
 
 class MySideFrame(tk.Frame):
     def __init__(self, parent,mode=None,callbacks=None,*args, **kwargs):
@@ -117,6 +127,7 @@ class MyMainFrame(tk.Frame):
                         bt = ttk.Button(
                             ButtonsFrame,
                             text=button,
+                            command=self.callbacks[m.MyActionButtons.data[button]["callback"]]
                         )
                         bt.grid(row=0, column=button_counter, sticky="nswe", columnspan=1, padx=2, pady=2)
                         ButtonsFrame.columnconfigure(button_counter, weight=1)

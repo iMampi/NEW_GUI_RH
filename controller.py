@@ -51,7 +51,12 @@ class MyRoot(tk.Tk):
         #print(self.MyMainFrame.h)
 
     def save_(self):
-        pass
+
+        mydata=self.MyMainFrame.MyViewFrame.get()
+        mycsv=m.MyInfos("mydb.csv")
+        print("récupération des données")
+        mycsv.save_record(mydata)
+        print ("Sauvegardé")
 
     def previous_(self):
         pass

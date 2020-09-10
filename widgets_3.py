@@ -129,7 +129,7 @@ class ValidAge(ValidDate):
             valid = False
         return valid
 
-#FIXME arranger ValidCombobox
+
 class ValidCombobox(ValidateMixin,ttk.Combobox):
     def _focusout_validate(self, event):
         valid = True
@@ -162,11 +162,10 @@ class ValidCombobox(ValidateMixin,ttk.Combobox):
          
 #TODO : implémenter les dialogbox
 #TODO : intégrer les messages d'erreur dde validation
-#TODO : intégrer les mmethode de validation
+
 #TODO : implement the img downloader annd imge widget displayer
 class LabelInput(tk.Frame):
     #change variable type for image file and tk.Text
-    #FIXME remettre tous les input_type à la normal
     field_type ={
         m.FieldTypes.string :{"type":tk.StringVar,"input_type":ValidEntry},
         m.FieldTypes.string_list : {"type":tk.StringVar,"input_type":ValidCombobox},
@@ -185,7 +184,7 @@ class LabelInput(tk.Frame):
         self.MyInfos=MyInfos
 
         MyInfo=self.MyInfos.data.get(label,"Error 404")
-        self.var_type = self.field_type[MyInfo['type']]["type"]
+        self.var_type = self.field_type[MyInfo['type']]["type"]()
         input_class=self.field_type[MyInfo["type"]]["input_type"]
 
 
@@ -224,11 +223,11 @@ class LabelInput(tk.Frame):
         # from disabled to normal ,get var,set var, disabled for tk.Text
 
         else:
-            input_args["textvariable"]=self.var_type()
+            input_args["textvariable"]=self.var_type
 
         input_args["width"]=20
         
-        var=self.var_type()
+        #var=self.var_type()
 
         self.LabelsFrame=parent.LabelsFrame
         self.EntriesFrame=parent.EntriesFrame

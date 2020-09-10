@@ -26,6 +26,8 @@ class MyTitles:
           "modification":"MODIFICATION DE LA FICHE DE L'EMPLOYE",
           "fire":"DEPART D'UN EMPLOYE"
     }
+    #todo corriger les champs a afficher en fonction du mode
+    #todo trouver un moyen de retiré "404" des champs lors de l'export csv
 class MyInfos:
     data={
         "Error 404":{"creation":{"mode":"404","row":30},
@@ -223,7 +225,7 @@ class MyInfos:
         if rownum==None:
             #saving a new entry
             with open(self.filename, 'a') as fh:
-                csvwriter = csv.DictWriter(fh, fieldnames=self.fields.keys())
+                csvwriter = csv.DictWriter(fh, fieldnames=self.data.keys())
                 if newfile:
                     csvwriter.writeheader()
                 csvwriter.writerow(data)
