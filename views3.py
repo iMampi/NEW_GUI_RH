@@ -6,6 +6,8 @@ import tkinter.font as tkf
 
 #TODO: add frame to view pictures
 #todo: fix this the dict of self.inputs
+#todo : prepare treeview for option "see all" with selectable line
+#todo : add selector with combobox to choose with to edit and which to see
 
 class MyViewFrame(tk.Frame):
     def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
