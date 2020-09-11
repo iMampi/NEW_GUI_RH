@@ -163,8 +163,8 @@ class ValidMail(ValidateMixin,ttk.Entry):
             valid=False
             self.error_var.set('Veuillez compléter.')
         elif not all(("@" in self.get(),
-                  any((x in tv for x in (".com",".org",".mg",'.uk','.fr','.us','.jp'))))
-                      )
+                      any((x in tv for x in (".com",".org",".mg",'.uk','.fr','.us','.jp')))
+                      )):
             valid=False
             self.error_var.set('Mail non valide.')
         return valid
@@ -175,10 +175,10 @@ class ValidPhone(ValidateMixin,ttk.Entry):
         if not self.get():
             valid=False
             self.error_var.set('Veuillez compléter.')
-        elif not all((self.get().isdigit(),len(self.get())=10)):
+        elif not all((self.get().isdigit(),len(self.get())==10)):
             valid = False
             self.error_var.set('Numéro non valide.')
-        elif not any((self.get().startswith(x) for x in ('034','033','032')):
+        elif not any((self.get().startswith(x) for x in ('034','033','032'))):
             valid = False
             self.error_var.set('Numéro non valide.')
         return valid
