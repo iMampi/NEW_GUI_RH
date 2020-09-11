@@ -158,7 +158,35 @@ class MyMainFrame(tk.Frame):
         pw1.columnconfigure(0, weight=1)
         self.rowconfigure(0,weight=1)
         self.columnconfigure(0,weight=1)
-        
+
+class ViewAll(tk.Toplevel):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.geometry("660x400")
+        #self.configure(width=660,height=900)
+        self.control_frame=tk.Frame(self)
+        self.control_frame.grid(row=0,column=0,sticky="nswe")
+
+        self.headers=[]
+        for key in m.MyInfos.data.keys():
+            if m.MyInfos.data[key].get("csvheader"):
+                self.headers.append(key)
+        self.treeview = ttk.Treeview(self,selectmode='browse',
+                                     columns=[*self.headers])
+        self.treeview.heading('#0',text="Ligne")
+        self.treeview.column('#0',minwidth=40,width=40)
+        for header in self.headers:
+            self.treeview.heading(header,text=header)
+            self.treeview.column(header, minwidth=40, width=80)
+        self.treeview.grid(row=1,column=0,sticky="nswe")
+
+        self.rowconfigure(1,weight=1)
+        #TODO: method to populate
+        #Todo:title and champ de saisie pour filtrer la sélection
+
+
+
+
                 
 """
 root=tk.Tk()

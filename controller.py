@@ -71,15 +71,21 @@ class MyRoot(tk.Tk):
         self.construction()
     
     def mode_consultation(self):
+        self.mode = "consultation"
+        v.ViewAll()
         self.MyMainFrame.MyViewFrame.destroy()
         print("consultation")
-        self.mode="consultation"
+
         self.construction()
         
     def mode_modification(self):
+        #FIXME : pour self mode changing first everywhere
+        #TODO : add bind : when we choose a number, the new viewframe gets created
+        self.mode = "modification"
+
         self.MyMainFrame.MyViewFrame.destroy()
         print("modification")
-        self.mode="modification"
+
         self.construction()
 
     def mode_fire(self):
