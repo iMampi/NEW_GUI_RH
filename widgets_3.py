@@ -3,7 +3,7 @@ from tkinter import ttk
 import base_ex as m
 import datetime as dt
 from dateutil.relativedelta import relativedelta
-
+#TODO : bind keyTab with tk.text to change widget instead of 4spaces
 
 class ValidateMixin :
     def __init__(self,*args,error_var=None, **kwargs) :
@@ -129,7 +129,6 @@ class ValidAge(ValidDate):
             valid = False
         return valid
 
-
 class ValidCombobox(ValidateMixin,ttk.Combobox):
     def _focusout_validate(self, event):
         valid = True
@@ -232,7 +231,8 @@ class LabelInput(tk.Frame):
             if label in ["Sexe","Etat civil","Département"]:
                 input_class=ValidEntry
 
-        if input_class in (ValidEntry,ValidDate,ValidAge):
+
+        if "Valid" in str(input_class):
             if self.mode=="fire":
                 input_args["state"] = MyInfo["fire"]["state"]
             elif self.mode=="consultation":

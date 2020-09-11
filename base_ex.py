@@ -212,14 +212,14 @@ class MyInfos:
         "Date fin":{"csvheader":True,
                     "creation":{"mode":False,"row":24},
                     "consultation":{"mode":True,"row":24},
-                    "modification":{"mode":True,"row":24},
+                    "modification":{"mode":False,"row":24},
                     "fire":{"mode":True,"row":0,"state":"normal"},
                     "type":FieldTypes.iso_date_string
                     },
         "Motif fin de contrat":{"csvheader":True,
                                 "creation":{"mode":False,"row":25},
                                 "consultation":{"mode":True,"row":25},
-                                "modification":{"mode":True,"row":25},
+                                "modification":{"mode":False,"row":25},
                                 "fire":{"mode":True,"row":1,"state":"normal"},
                                 "type":FieldTypes.string_list,
                                 "values":MyLists.motif_fin_list
