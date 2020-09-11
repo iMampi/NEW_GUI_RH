@@ -159,13 +159,32 @@ class MyMainFrame(tk.Frame):
         self.rowconfigure(0,weight=1)
         self.columnconfigure(0,weight=1)
 
+class SelectFrame(tk.Frame):
+    def __init__(self,parent,*args,**kwargs):
+        super().__init__(parent,*args,**kwargs)
+        self.s_lab=tk.Label(self,text="Who u gonna choose?")
+        self.s_lab.grid(row=0,column=0,sticky="nswe",)
+        self.s_var=tk.StringVar()
+        self.s_entry=ttk.Entry(self,textvariable=self.s_var)
+        self.s_entry.grid(row=1,column=0)
+        #Todo:create and associate the command
+        self.s_bt=ttk.Button(self,text="Voir")
+        self.s_bt.grid(row=1,column=1)
+
+
+
+
 class ViewAll(tk.Toplevel):
+    #todo : x and y scrool bar
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.geometry("660x400")
-        #self.configure(width=660,height=900)
-        self.control_frame=tk.Frame(self)
+        self.title("Sélectionnez l'individu")
+        self.control_frame=SelectFrame(self)
         self.control_frame.grid(row=0,column=0,sticky="nswe")
+
+
+
 
         self.headers=[]
         for key in m.MyInfos.data.keys():
