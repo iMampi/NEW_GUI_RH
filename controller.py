@@ -76,6 +76,7 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.destroy()
         print("consultation")
 
+
         self.construction()
         
     def mode_modification(self):

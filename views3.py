@@ -172,36 +172,68 @@ class SelectFrame(tk.Frame):
         self.s_bt.grid(row=1,column=1)
 
 
-
-
 class ViewAll(tk.Toplevel):
     #todo : x and y scrool bar
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.geometry("660x400")
+        self.geometry("500x400")
+        self.minsize(width=500, height=400)
         self.title("Sélectionnez l'individu")
+
+
         self.control_frame=SelectFrame(self)
-        self.control_frame.grid(row=0,column=0,sticky="nswe")
+        self.control_frame.grid(row=0,column=0,sticky="nswe",padx=12,pady=10)
 
+        tv_frame=tk.Frame(self)
+        tv_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
+        tv_frame.columnconfigure(0, weight=1)
+        tv_frame.columnconfigure(1, weight=0)
+        tv_frame.rowconfigure(0, weight=1)
+        tv_frame.rowconfigure(1, weight=0)
 
+        self.tv_canvas =tk.Canvas(tv_frame, bd=-3)
+        self.tv_canvas.grid(row=0,column=0, sticky="nswe")
+        self.tv_canvas.columnconfigure(0, weight=1)
+        self.tv_canvas.rowconfigure(0, weight=1)
+        self.tv_canvas.rowconfigure(1, weight=1)
 
+        tv_xscrollbar=ttk.Scrollbar(tv_frame,orient="horizontal",command=self.tv_canvas.xview)
+        tv_xscrollbar.grid(row=1,column=0,sticky='swe')
+        tv_yscrollbar = ttk.Scrollbar(tv_frame, orient="vertical", command=self.tv_canvas.yview)
+        tv_yscrollbar.grid(row=0, column=1, sticky='nse')
+
+        self.tv_canvas.configure(xscrollcommand=tv_xscrollbar.set)
+        self.tv_canvas.bind('<Configure>',
+                            lambda e: self.tv_canvas.configure(scrollregion = self.tv_canvas.bbox("all")))
+        self.tv_canvas.configure(yscrollcommand=tv_yscrollbar.set)
+        self.tv_canvas.bind('<Configure>',
+                            lambda e: self.tv_canvas.configure(scrollregion=self.tv_canvas.bbox("all")))
 
         self.headers=[]
         for key in m.MyInfos.data.keys():
             if m.MyInfos.data[key].get("csvheader"):
                 self.headers.append(key)
-        self.treeview = ttk.Treeview(self,selectmode='browse',
-                                     columns=[*self.headers])
+        self.treeview = ttk.Treeview(self.tv_canvas,selectmode='browse',
+                                     columns=[*self.headers],height=100)
         self.treeview.heading('#0',text="Ligne")
-        self.treeview.column('#0',minwidth=40,width=40)
+        self.treeview.column('#0',minwidth=40,width=40,stretch=True)
         for header in self.headers:
             self.treeview.heading(header,text=header)
-            self.treeview.column(header, minwidth=40, width=80)
+            self.treeview.column(header, minwidth=40, width=80,stretch=True)
+
+        self.treeview.insert('','end',iid='1',text='Listbox',values=['rh032','IR',"Mampi"])
+        print('bbox')
+        print(self.tv_canvas.bbox("all"))
         self.treeview.grid(row=1,column=0,sticky="nswe")
 
+        self.tv_canvas.create_window((0,0),window=self.treeview,anchor='nw')
         self.rowconfigure(1,weight=1)
+        self.columnconfigure(0,weight=1)
+        #self.columnconfigure(1, weight=1)
+
         #TODO: method to populate
         #Todo:title and champ de saisie pour filtrer la sélection
+        #todo : bind rolling wheel of mouse
 
 
 
