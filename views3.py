@@ -238,10 +238,7 @@ class ViewAll(tk.Toplevel):
     def populate(self):
         counter=0
         for row_data in self.data:
-            row_values = []
-            for header in self.headers:
-                row_values.append(row_data[header])
-
+            row_values = [row_data[header] for header in self.headers ]
             self.treeview.insert('', 'end', iid=counter, values=[*row_values])
             print("values for tv :")
             print(row_values)
