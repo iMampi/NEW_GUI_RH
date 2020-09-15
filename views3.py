@@ -5,7 +5,6 @@ import base_ex as m
 import tkinter.font as tkf
 
 #TODO: add frame to view pictures
-#todo: fix this the dict of self.inputs
 #todo : prepare treeview for option "see all" with selectable line
 #todo : add selector with combobox to choose with to edit and which to see
 
@@ -167,7 +166,6 @@ class SelectFrame(tk.Frame):
 
 
 class ViewAll(tk.Toplevel):
-    #todo : x and y scrool bar
     def __init__(self,data,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.geometry("500x400")
@@ -225,7 +223,6 @@ class ViewAll(tk.Toplevel):
         self.columnconfigure(0,weight=1)
         #self.columnconfigure(1, weight=1)
 
-        #TODO: method to populate
         #Todo:title and champ de saisie pour filtrer la sélection
         #todo : bind rolling wheel of mouse
 
@@ -237,7 +234,6 @@ class ViewAll(tk.Toplevel):
             counter += 1
 
 
-                #todo finish this line of code
 
 
 

@@ -28,7 +28,6 @@ class MyTitles:
           "modification":"MODIFICATION DE LA FICHE DE L'EMPLOYE",
           "fire":"DEPART D'UN EMPLOYE"
     }
-    #todo corriger les champs a afficher en fonction du mode
 class MyInfos:
     data={
         "Error 404":{"csvheader":False,
@@ -268,13 +267,8 @@ class MyInfos:
             #todo : saving a modification on old entry
             pass
 
-    #TODO : csvreader to load data
     def load_records(self, rownum=None):
         with open(self.filename, 'r',newline='') as fh:
-            # csvreader = csv.DictReader(fh,
-            #                            fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
-            #                            delimiter=";"
-            #                            )
             csvreader = csv.DictReader(fh,
                                        delimiter=";"
                                        )
