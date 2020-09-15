@@ -54,7 +54,6 @@ class ValidateMixin :
 
     def _focusout_invalid(self,**kwargs):
         self._toggle_error(on=True)
-        print("focus out invalid : active")
 
     def _key_invalid(self,**kwargs):
         pass
@@ -273,8 +272,6 @@ class LabelInput(tk.Frame):
         self.MyLabel = tk.Label(self.LabelsFrame,text=label,anchor="ne",**label_args)
         self.ErrorLabel = tk.Label(self.EntriesFrame, textvariable=self.error_var)
 
-        if input_class==tk.Text:
-            print(f"state of tk.Text : {self.MyInput.cget('state')}")
         #self.MyError =
         
                 

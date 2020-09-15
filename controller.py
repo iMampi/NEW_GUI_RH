@@ -24,8 +24,6 @@ class MyRoot(tk.Tk):
         self.minsize(width=660, height=900)
         mycsv = m.MyInfos("mydb.csv")
         self.data=mycsv.load_records()
-        print("my datas :")
-        print(self.data)
 
     def construction(self):
         

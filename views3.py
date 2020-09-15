@@ -42,10 +42,6 @@ class MyViewFrame(tk.Frame):
                     self.inputs[field].grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=150)
-                    #self.inputs[field] = x.MyInput
-                    #print("x.MyInput :", end="")
-                    #print(x.MyInput)
-                    #counter += 1
         elif self.mode is "fire":
             for field in m.MyInfos.data.keys():
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
@@ -57,8 +53,6 @@ class MyViewFrame(tk.Frame):
                     self.columnconfigure(1, weight=1,minsize=100)
                     self.inputs[field] = x.MyInput
 
-                    #counter += 1
-        print(self.inputs)
 
 
     def grid(self,**kwargs):
@@ -240,8 +234,6 @@ class ViewAll(tk.Toplevel):
         for row_data in self.data:
             row_values = [row_data[header] for header in self.headers ]
             self.treeview.insert('', 'end', iid=counter, values=[*row_values])
-            print("values for tv :")
-            print(row_values)
             counter += 1
 
 
