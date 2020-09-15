@@ -174,11 +174,12 @@ class SelectFrame(tk.Frame):
 
 class ViewAll(tk.Toplevel):
     #todo : x and y scrool bar
-    def __init__(self,*args,**kwargs):
+    def __init__(self,data,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.geometry("500x400")
         self.minsize(width=500, height=400)
         self.title("Sélectionnez l'individu")
+        self.data=data
 
 
         self.control_frame=SelectFrame(self)
@@ -221,9 +222,8 @@ class ViewAll(tk.Toplevel):
             self.treeview.heading(header,text=header)
             self.treeview.column(header, minwidth=40, width=80,stretch=True)
 
-        self.treeview.insert('','end',iid='1',text='Listbox',values=['rh032','IR',"Mampi"])
-        print('bbox')
-        print(self.tv_canvas.bbox("all"))
+        #self.treeview.insert('','end',iid='1',text='Listbox',values=['rh032','IR',"Mampi"])
+
         self.treeview.grid(row=1,column=0,sticky="nswe")
 
         self.tv_canvas.create_window((0,0),window=self.treeview,anchor='nw')
@@ -234,6 +234,23 @@ class ViewAll(tk.Toplevel):
         #TODO: method to populate
         #Todo:title and champ de saisie pour filtrer la sélection
         #todo : bind rolling wheel of mouse
+
+    def populate(self):
+        counter=0
+        for row_data in self.data:
+            row_values = []
+            for header in self.headers:
+                row_values.append(row_data[header])
+
+            self.treeview.insert('', 'end', iid=counter, values=[*row_values])
+            print("values for tv :")
+            print(row_values)
+            counter += 1
+
+
+                #todo finish this line of code
+
+
 
 
 

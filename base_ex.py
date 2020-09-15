@@ -256,7 +256,7 @@ class MyInfos:
 
         if rownum==None:
             #saving a new entry
-            with open(self.filename, 'a') as fh:
+            with open(self.filename, 'a',newline='') as fh:
                 csvwriter = csv.DictWriter(fh,
                                            fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
                                            delimiter=";"
@@ -265,9 +265,26 @@ class MyInfos:
                     csvwriter.writeheader()
                 csvwriter.writerow(data)
         else:
-            #saving a modification on old entry
+            #todo : saving a modification on old entry
             pass
-            
+
+    #TODO : csvreader to load data
+    def load_records(self, rownum=None):
+        with open(self.filename, 'r',newline='') as fh:
+            # csvreader = csv.DictReader(fh,
+            #                            fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
+            #                            delimiter=";"
+            #                            )
+            csvreader = csv.DictReader(fh,
+                                       delimiter=";"
+                                       )
+            data = list(csvreader)
+        if rownum==None:
+            return data
+        else:
+            return data[int(rownum)-1]
+
+
 class MySideButtons:
     #update the callbacks
     

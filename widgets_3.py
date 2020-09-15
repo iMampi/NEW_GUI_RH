@@ -157,13 +157,12 @@ class ValidCombobox(ValidateMixin,ttk.Combobox):
     
 class ValidMail(ValidateMixin,ttk.Entry):
     def _focusout_validate(self,event):
+        data=self.get()
         valid=True
         if not self.get():
             valid=False
             self.error_var.set('Veuillez compléter.')
-        elif not all(("@" in self.get(),
-                      any((x in tv for x in (".com",".org",".mg",'.uk','.fr','.us','.jp')))
-                      )):
+        elif not all(["@" in data, any([x in data for x in  (".com",".org",".mg",'.uk','.fr','.us','.jp')])]):
             valid=False
             self.error_var.set('Mail non valide.')
         return valid
@@ -319,12 +318,12 @@ class LabelInput(tk.Frame):
             self.MyInput.delete(0, tk.END)
             self.MyInput.insert(0, value)
 
-
+"""
 MyInfos=m.MyInfos
 MyInfo=MyInfos.data.get("Matricule","Error 404")
 var_type = LabelInput.field_type[MyInfo["type"]]["type"]
 print(var_type)
-
+"""
 """
 ##EXAMPLE##
 root=tk.Tk()
