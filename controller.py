@@ -22,8 +22,8 @@ class MyRoot(tk.Tk):
         
         self.construction()
         self.minsize(width=660, height=900)
-        mycsv = m.MyInfos("mydb.csv")
-        self.data=mycsv.load_records()
+        self.mycsv = m.MyInfos("mydb.csv")
+        self.data=self.mycsv.load_records()
 
     def construction(self):
         
@@ -57,11 +57,11 @@ class MyRoot(tk.Tk):
 
         mydata=self.MyMainFrame.MyViewFrame.get()
 
-        mycsv=m.MyInfos("mydb.csv")
+        # mycsv=m.MyInfos("mydb.csv")
         print("récupération des données")
-        mycsv.save_record(mydata)
+        self.mycsv.save_record(mydata)
         print ("Sauvegardé")
-        #todo rest the form
+        self.MyMainFrame.MyViewFrame.reset()
 
     def previous_(self):
         pass
@@ -73,7 +73,9 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.destroy()
         print("creation")
         self.mode="creation"
+
         self.construction()
+        self.MyMainFrame.MyViewFrame.set(self.mycsv.new_matricule())
     
     def mode_consultation(self):
         self.mode = "consultation"

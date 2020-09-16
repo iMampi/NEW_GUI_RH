@@ -315,6 +315,20 @@ class LabelInput(tk.Frame):
             self.MyInput.delete(0, tk.END)
             self.MyInput.insert(0, value)
 
+    def delete(self):
+        try:
+            if type(self.MyInput) == tk.Text:
+                self.MyInput.delete('1.0', tk.END)
+            elif self.var_type:
+               self.MyInput.delete(0,tk.END)
+            else:
+                self.MyInput.delete(0,tk.END)
+            #FIXME handle this exception
+        except (TypeError, tk.TclError):
+            print ("Error while deleting")
+            # happens when numeric fields are empty.
+            return ''
+
 """
 MyInfos=m.MyInfos
 MyInfo=MyInfos.data.get("Matricule","Error 404")

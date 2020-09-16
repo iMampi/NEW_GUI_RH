@@ -66,8 +66,22 @@ class MyViewFrame(tk.Frame):
         print(data)
         return data
 
-    def set(self):
-        pass
+    def reset(self):
+        for widget in self.inputs.values():
+            widget.delete()
+
+        #todo : insert dialog box
+        print('RESET')
+
+    def set(self,data_dict):
+        print("trying to set")
+        #todo : it works for the new matricule. must try on setting all values
+        for key,new_data in data_dict.items():
+            try:
+                self.inputs[key].set(new_data)
+            except KeyError:
+                pass
+
 
 class MySideFrame(tk.Frame):
     def __init__(self, parent,mode=None,callbacks=None,*args, **kwargs):

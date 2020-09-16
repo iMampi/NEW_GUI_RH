@@ -268,6 +268,8 @@ class MyInfos:
             pass
 
     def load_records(self, rownum=None):
+        #todo add verification that the number of row  in the file is correct,
+        # and the fileds name are correct
         with open(self.filename, 'r',newline='') as fh:
             csvreader = csv.DictReader(fh,
                                        delimiter=";"
@@ -277,6 +279,16 @@ class MyInfos:
             return data
         else:
             return data[int(rownum)-1]
+
+    def new_matricule(self):
+        #fixme : to optimize
+        csvdata=self.load_records()
+        last_row_mat=csvdata[-1]["Matricule"].split("rh")
+        old_num=int(last_row_mat[1])
+        new_num='rh'+str(old_num+1)
+        return {"Matricule":new_num}
+
+
 
 
 class MySideButtons:
