@@ -73,7 +73,6 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.destroy()
         print("creation")
         self.mode="creation"
-
         self.construction()
         self.MyMainFrame.MyViewFrame.set(self.mycsv.new_matricule())
     
@@ -81,10 +80,11 @@ class MyRoot(tk.Tk):
         self.mode = "consultation"
         view_all=v.ViewAll(self.data)
         view_all.populate()
+
+        # view_all.myiid()
+
         self.MyMainFrame.MyViewFrame.destroy()
         print("consultation")
-
-
         self.construction()
         
     def mode_modification(self):

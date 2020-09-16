@@ -171,9 +171,11 @@ class SelectFrame(tk.Frame):
         super().__init__(parent,*args,**kwargs)
         self.s_lab=tk.Label(self,text="Who u gonna choose?")
         self.s_lab.grid(row=0,column=0,sticky="nswe",)
+
         self.s_var=tk.StringVar()
         self.s_entry=ttk.Entry(self,textvariable=self.s_var)
         self.s_entry.grid(row=1,column=0)
+
         #Todo:create and associate the command
         self.s_bt=ttk.Button(self,text="Voir")
         self.s_bt.grid(row=1,column=1)
@@ -187,11 +189,13 @@ class ViewAll(tk.Toplevel):
         self.title("Sélectionnez l'individu")
         self.data=data
 
+        self.control_frame = SelectFrame(self)
+        print('args from trace:')
+        self.control_frame.s_var.trace("w", callback=self.myfilter)
 
-        self.control_frame=SelectFrame(self)
         self.control_frame.grid(row=0,column=0,sticky="nswe",padx=12,pady=10)
 
-        tv_frame=tk.Frame(self)
+        tv_frame = tk.Frame(self)
         tv_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
         tv_frame.columnconfigure(0, weight=1)
         tv_frame.columnconfigure(1, weight=0)
@@ -240,12 +244,40 @@ class ViewAll(tk.Toplevel):
         #Todo:title and champ de saisie pour filtrer la sélection
         #todo : bind rolling wheel of mouse
 
-    def populate(self):
+
+    def myfilter(self,*args):
+        #fixme : optimize maybe
+
+        init_iids=self.treeview.get_children()
+        for iid in init_iids:
+            self.treeview.delete(iid)
+
+        self.populate()
+        characters = self.control_frame.s_entry.get()
+        if characters=='':
+            return
+        else:
+            myiids=list(self.treeview.get_children())
+            print('my initial iids')
+            print(myiids)
+            for myiid in myiids:
+                values=self.treeview.set(myiid)
+                headers=['Matricule','Noms','Prénoms']
+                test=[]
+                for header in headers:
+                    test.append(characters not in values[header])
+                if all(test):
+                        self.treeview.delete(myiid)
+
+    def populate(self,data=None):
+        # if data==None:
         counter=0
         for row_data in self.data:
             row_values = [row_data[header] for header in self.headers ]
-            self.treeview.insert('', 'end', iid=counter, values=[*row_values])
+            self.treeview.insert('', 'end', iid=counter, values=row_values)
             counter += 1
+        #else:
+
 
 
 
