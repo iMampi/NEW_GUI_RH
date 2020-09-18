@@ -274,7 +274,13 @@ class MyInfos:
             csvreader = csv.DictReader(fh,
                                        delimiter=";"
                                        )
-            data = list(csvreader)
+            if len(set(csvreader.fieldnames) -
+                   set([x for x in self.data.keys() if self.data[x]['csvheader']])) == 0 :
+
+                data = list(csvreader)
+            else:
+                raise Exception('Error in the CSV file')
+                return
         if rownum==None:
             return data
         else:
