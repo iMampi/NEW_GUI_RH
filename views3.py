@@ -231,6 +231,9 @@ class ViewAll(tk.Toplevel):
         for header in self.headers:
             self.treeview.heading(header,text=header)
             self.treeview.column(header, minwidth=40, width=80,stretch=True)
+            #todo : take callback from controller
+        self.treeview.bind('<<TreeviewSelect>>', self.get_matricule)
+
 
         #self.treeview.insert('','end',iid='1',text='Listbox',values=['rh032','IR',"Mampi"])
 
@@ -241,6 +244,7 @@ class ViewAll(tk.Toplevel):
         self.columnconfigure(0,weight=1)
         #self.columnconfigure(1, weight=1)
 
+        #self.treeview.bind(<<TreeviewOpen>>,self.get_matricule)
         #Todo:title and champ de saisie pour filtrer la sélection
         #todo : bind rolling wheel of mouse
 
@@ -269,6 +273,19 @@ class ViewAll(tk.Toplevel):
                     test.append(characters not in values[header])
                 if all(test):
                         self.treeview.delete(myiid)
+
+    def get_matricule(self, *args):
+
+        # return iid
+        current = self.treeview.selection()
+        # or another alternative
+        # current=self.treeview.item(self.treeview.focus())
+        values = self.treeview.set(current)
+        return values['Matricule']
+
+
+
+
 
     def populate(self,data=None):
         # if data==None:

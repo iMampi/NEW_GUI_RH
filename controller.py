@@ -16,7 +16,8 @@ class MyRoot(tk.Tk):
                         "creation":self.mode_creation,
                         "consultation":self.mode_consultation,
                         "modification":self.mode_modification,
-                        "fire":self.mode_fire
+                        "fire":self.mode_fire,
+                        "populate_form":self.load_form()
                         }
         self.MyMainFrame=None
         
@@ -98,10 +99,20 @@ class MyRoot(tk.Tk):
         self.construction()
 
     def mode_fire(self):
+
         self.MyMainFrame.MyViewFrame.destroy()
         print("fire")
         self.mode="fire"
         self.construction()
+
+    def load_form(self):
+        mat = v.ViewAll.get_matricule()
+        for row in self.data:
+            if row['Matricule']==mat:
+                return row
+
+        for v.MyMainFrame.MyViewFrame
+
     
 
         

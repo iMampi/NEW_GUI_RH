@@ -13,6 +13,7 @@ class FieldTypes:
     iso_date_age_string = 9
     string_mail = 10
     string_phone = 11
+    string_matricule = 12
 
 
 class MyLists:
@@ -42,7 +43,7 @@ class MyInfos:
                      "consultation":{"mode":True,"row":0},
                      "modification":{"mode":True,"row":0},
                      "fire":{"mode":True,"row":3,"state":"readonly"},
-                     "type":FieldTypes.string
+                     "type":FieldTypes.string_matricule
                      },
         "Noms":{"csvheader":True,
                 "creation":{"mode":True,"row":1},
@@ -268,14 +269,13 @@ class MyInfos:
             pass
 
     def load_records(self, rownum=None):
-        #todo add verification that the number of row  in the file is correct,
-        # and the fileds name are correct
         with open(self.filename, 'r',newline='') as fh:
             csvreader = csv.DictReader(fh,
                                        delimiter=";"
                                        )
             if len(set(csvreader.fieldnames) -
                    set([x for x in self.data.keys() if self.data[x]['csvheader']])) == 0 :
+                print('Data base is ok.')
 
                 data = list(csvreader)
             else:

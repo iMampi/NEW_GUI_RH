@@ -180,6 +180,24 @@ class ValidPhone(ValidateMixin,ttk.Entry):
             self.error_var.set('Numéro non valide.')
         return valid
 
+class ValidMatricule(ValidateMixin,ttk.Entry):
+    def _focusout_validate(self,event):
+        data=self.get()
+
+        valid=True
+        if not self.get():
+            valid=False
+            self.error_var.set('Veuillez compléter.')
+        elif data.lower().startswith("rh") :
+            if data.split('rh')[1].isdigit():
+                valid=True
+            else:
+                self.error_var.set('Matricule non valide.')
+        else:
+            valid=False
+            self.error_var.set('Matricule non valide.')
+        return valid
+
 
 
          
@@ -200,7 +218,8 @@ class LabelInput(tk.Frame):
         m.FieldTypes.boolean : {"type":tk.BooleanVar,"input_type":ValidEntry},
         m.FieldTypes.image_file : {"type":tk.StringVar,"input_type":ValidEntry},
         m.FieldTypes.string_mail: {"type": tk.StringVar, "input_type": ValidMail},
-        m.FieldTypes.string_phone: {"type": tk.StringVar, "input_type": ValidPhone}
+        m.FieldTypes.string_phone: {"type": tk.StringVar, "input_type": ValidPhone},
+        m.FieldTypes.string_matricule: {"type": tk.StringVar, "input_type": ValidMatricule}
         }
     
     def __init__(self,parent,mode=None,label=None, MyInfos=m.MyInfos, **kwargs):
