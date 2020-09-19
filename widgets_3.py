@@ -237,19 +237,20 @@ class LabelInput(tk.Frame):
         #mieux structutrer les if avec les changements de mode
         input_args={}
         label_args={}
+        error_args = {}
         if self.mode=="creation":
             if MyInfo.get("values",None):
                input_args["values"]=MyInfo.get("values",None)
         if self.mode=="consultation":
-            if input_class in (ttk.Combobox, ValidCombobox):
-                input_class=ValidEntry
+            if "Valid" in str(input_class) or input_class==ttk.Combobox :
+                input_class=ttk.Entry
 
         if self.mode=="fire":
             if label in ["Sexe","Etat civil","Département"]:
-                input_class=ValidEntry
+                input_class=ttk.Entry
 
 
-        if "Valid" in str(input_class):
+        if "Valid" in str(input_class) or ttk.Entry:
             if self.mode=="fire":
                 input_args["state"] = MyInfo["fire"]["state"]
             elif self.mode=="consultation":
@@ -284,12 +285,14 @@ class LabelInput(tk.Frame):
         
                 
         self.MyInput = input_class(self.EntriesFrame,**input_args,**kwargs)
-        if input_class != tk.Text:
+        if input_class not in [tk.Text,ttk.Entry]:
             self.error_var = self.MyInput.error_var
+            error_args['textvariable']=self.error_var
         else:
-            self.error_var = tk.StringVar(value='')
+            pass
+            #self.error_var = tk.StringVar(value='')
         self.MyLabel = tk.Label(self.LabelsFrame,text=label,anchor="ne",**label_args)
-        self.ErrorLabel = tk.Label(self.EntriesFrame, textvariable=self.error_var)
+        self.ErrorLabel = tk.Label(self.EntriesFrame, **error_args)
 
         #self.MyError =
         
