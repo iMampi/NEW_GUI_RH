@@ -13,6 +13,7 @@ class MyRoot(tk.Tk):
 
         self.mycsv = m.MyInfos("mydb.csv")
         self.data=self.mycsv.load_records()
+        self.current_index=None
 
         self.callbacks={"Save":self.save_,
                         "Previous":self.previous_,
@@ -28,13 +29,13 @@ class MyRoot(tk.Tk):
         self.minsize(width=660, height=900)
 
 
-    def construction(self,data_form=None):
-
+    def construction(self,myindex=None):
+        self.current_index=myindex
         self.MyMainFrame=v.MyMainFrame(self,mode=self.mode,callbacks=self.callbacks)
-        if data_form==None:
+        if myindex==None:
             pass
         else:
-            self.MyMainFrame.MyViewFrame.set(data_form)
+            self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
 
         self.MyMainFrame.grid(row=0,column=0,sticky="nswe")
         #self.MyMainFrame.propagate()
@@ -72,16 +73,40 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.reset()
 
     def previous_(self):
+        self.current_index=self.current_index-1
+        self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
         pass
     
     def next_(self):
+        self.current_index = self.current_index + 1
+        self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
+
+
         pass
+
+    #todo : les fonctions precedent et suivant
+    #todo : dans consultation, les soldes congés, date fin et motif contrat sont en mode obligatoire,
+    # ce qui trigger les error_label
 
     def MyTreeview(self):
         self.TV=v.ViewAll(self.data,self.callbacks)
         self.TV.populate()
         self.TV.bind('<<TreeviewOpen>>', self.doubleclick)
-    
+
+    def doubleclick(self,*args):
+        current = self.TV.treeview.selection()
+        values = self.TV.treeview.set(current)
+        mat=values["Matricule"]
+        for row,values in enumerate(self.data):
+            if values['Matricule']==mat:
+                row_index=row
+                self.construction(myindex=row_index)
+                self.TV.destroy()
+                break
+
+
+
+
     def mode_creation(self):
         self.MyMainFrame.MyViewFrame.destroy()
         print("creation")
@@ -89,23 +114,12 @@ class MyRoot(tk.Tk):
         self.construction()
         self.MyMainFrame.MyViewFrame.set(self.mycsv.new_matricule())
 
-    
     def mode_consultation(self):
         self.mode = "consultation"
         self.MyTreeview()
-        # view_all=v.ViewAll(self.data,self.callbacks)
-        # view_all.populate()
-        # view_all.treeview.bind('<<TreeviewSelect>>', self.doubleclick)
-
-        # view_all.treeview.bind('<<TreeviewSelect>>', view_all.get_values)
-
-
-
-
-        self.MyMainFrame.MyViewFrame.destroy()
+        #self.MyMainFrame.MyViewFrame.destroy()
         print("consultation")
-        self.construction()
-        
+
     def mode_modification(self):
         #FIXME : pour self mode changing first everywhere
         #TODO : add bind : when we choose a number, the new viewframe gets created
@@ -117,16 +131,11 @@ class MyRoot(tk.Tk):
         self.construction()
 
     def mode_fire(self):
-
         self.MyMainFrame.MyViewFrame.destroy()
         print("fire")
         self.mode="fire"
         self.construction()
 
-    def doubleclick(self,*args):
-        current = self.TV.treeview.selection()
-        values = self.TV.treeview.set(current)
-        self.construction(data_form=values)
 
 
 
