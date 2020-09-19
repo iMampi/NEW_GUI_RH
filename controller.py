@@ -10,25 +10,32 @@ class MyRoot(tk.Tk):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.mode=None
+
+        self.mycsv = m.MyInfos("mydb.csv")
+        self.data=self.mycsv.load_records()
+
         self.callbacks={"Save":self.save_,
                         "Previous":self.previous_,
                         "Next":self.next_,
                         "creation":self.mode_creation,
                         "consultation":self.mode_consultation,
                         "modification":self.mode_modification,
-                        "fire":self.mode_fire,
-                        "populate_form":self.load_form()
+                        "fire":self.mode_fire
                         }
         self.MyMainFrame=None
-        
+
         self.construction()
         self.minsize(width=660, height=900)
-        self.mycsv = m.MyInfos("mydb.csv")
-        self.data=self.mycsv.load_records()
 
-    def construction(self):
-        
+
+    def construction(self,data_form=None):
+
         self.MyMainFrame=v.MyMainFrame(self,mode=self.mode,callbacks=self.callbacks)
+        if data_form==None:
+            pass
+        else:
+            self.MyMainFrame.MyViewFrame.set(data_form)
+
         self.MyMainFrame.grid(row=0,column=0,sticky="nswe")
         #self.MyMainFrame.propagate()
         
@@ -69,6 +76,11 @@ class MyRoot(tk.Tk):
     
     def next_(self):
         pass
+
+    def MyTreeview(self):
+        self.TV=v.ViewAll(self.data,self.callbacks)
+        self.TV.populate()
+        self.TV.bind('<<TreeviewOpen>>', self.doubleclick)
     
     def mode_creation(self):
         self.MyMainFrame.MyViewFrame.destroy()
@@ -76,13 +88,19 @@ class MyRoot(tk.Tk):
         self.mode="creation"
         self.construction()
         self.MyMainFrame.MyViewFrame.set(self.mycsv.new_matricule())
+
     
     def mode_consultation(self):
         self.mode = "consultation"
-        view_all=v.ViewAll(self.data)
-        view_all.populate()
+        self.MyTreeview()
+        # view_all=v.ViewAll(self.data,self.callbacks)
+        # view_all.populate()
+        # view_all.treeview.bind('<<TreeviewSelect>>', self.doubleclick)
 
-        # view_all.myiid()
+        # view_all.treeview.bind('<<TreeviewSelect>>', view_all.get_values)
+
+
+
 
         self.MyMainFrame.MyViewFrame.destroy()
         print("consultation")
@@ -105,13 +123,39 @@ class MyRoot(tk.Tk):
         self.mode="fire"
         self.construction()
 
-    def load_form(self):
-        mat = v.ViewAll.get_matricule()
-        for row in self.data:
-            if row['Matricule']==mat:
-                return row
+    def doubleclick(self,*args):
+        current = self.TV.treeview.selection()
+        values = self.TV.treeview.set(current)
+        self.construction(data_form=values)
 
-        for v.MyMainFrame.MyViewFrame
+
+
+        #         # or another alternative
+        #         # current=self.treeview.item(self.treeview.focus())
+        #         values = self.treeview.set(current)
+        #         # return a dict of values from the selected row
+        #         return values
+
+
+
+    # def populate_form(self,*args):
+    #         current = v.ViewAll.treeview.selection()
+    #         # or another alternative
+    #         # current=self.treeview.item(self.treeview.focus())
+    #         values = self.treeview.set(current)
+    #         # return a dict of values from the selected row
+    #         return values
+    #
+    #
+    #
+    #
+    #
+    #     mat = v.ViewAll.get_values(*args)
+    #     for row in self.data:
+    #         if row['Matricule']==mat:
+    #             return row
+    #
+    #     # for v.MyMainFrame.MyViewFrame
 
     
 

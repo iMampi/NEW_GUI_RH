@@ -182,12 +182,14 @@ class SelectFrame(tk.Frame):
 
 
 class ViewAll(tk.Toplevel):
-    def __init__(self,data,*args,**kwargs):
+    def __init__(self,data,callbacks,*args,**kwargs):
         super().__init__(*args,**kwargs)
+        self.callbacks=callbacks
         self.geometry("500x400")
         self.minsize(width=500, height=400)
         self.title("Sélectionnez l'individu")
         self.data=data
+        self.data_form=None
 
         self.control_frame = SelectFrame(self)
         print('args from trace:')
@@ -232,7 +234,7 @@ class ViewAll(tk.Toplevel):
             self.treeview.heading(header,text=header)
             self.treeview.column(header, minwidth=40, width=80,stretch=True)
             #todo : take callback from controller
-        self.treeview.bind('<<TreeviewSelect>>', self.get_matricule)
+        # self.treeview.bind('<<TreeviewSelect>>', self.get_values)
 
 
         #self.treeview.insert('','end',iid='1',text='Listbox',values=['rh032','IR',"Mampi"])
@@ -274,14 +276,19 @@ class ViewAll(tk.Toplevel):
                 if all(test):
                         self.treeview.delete(myiid)
 
-    def get_matricule(self, *args):
+    def get_values(self, *args):
 
         # return iid
         current = self.treeview.selection()
         # or another alternative
         # current=self.treeview.item(self.treeview.focus())
         values = self.treeview.set(current)
-        return values['Matricule']
+        # return a dict of values from the selected row
+        # MyViewFrame.set(data_dict=values)
+        print(values)
+        self.data_form=values
+
+        return values
 
 
 
