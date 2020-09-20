@@ -84,9 +84,6 @@ class MyRoot(tk.Tk):
 
         pass
 
-    #todo : les fonctions precedent et suivant
-    #todo : dans consultation, les soldes congés, date fin et motif contrat sont en mode obligatoire,
-    # ce qui trigger les error_label
 
     def MyTreeview(self):
         self.TV=v.ViewAll(self.data,self.callbacks)
@@ -122,7 +119,6 @@ class MyRoot(tk.Tk):
 
     def mode_modification(self):
         #FIXME : pour self mode changing first everywhere
-        #TODO : add bind : when we choose a number, the new viewframe gets created
         self.mode = "modification"
 
         self.MyMainFrame.MyViewFrame.destroy()

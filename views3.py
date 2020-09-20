@@ -5,8 +5,6 @@ import base_ex as m
 import tkinter.font as tkf
 
 #TODO: add frame to view pictures
-#todo : prepare treeview for option "see all" with selectable line
-#todo : add selector with combobox to choose with to edit and which to see
 
 class MyViewFrame(tk.Frame):
     def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
@@ -75,7 +73,6 @@ class MyViewFrame(tk.Frame):
 
     def set(self,data_dict):
         print("trying to set")
-        #todo : it works for the new matricule. must try on setting all values
         for key,new_data in data_dict.items():
             try:
                 self.inputs[key].set(new_data)
@@ -260,19 +257,21 @@ class ViewAll(tk.Toplevel):
             self.treeview.delete(iid)
 
         self.populate()
-        characters = self.control_frame.s_entry.get()
+        #added lower
+        characters = self.control_frame.s_entry.get().lower()
         if characters=='':
             return
         else:
             myiids=list(self.treeview.get_children())
-            print('my initial iids')
-            print(myiids)
+            # print('my initial iids')
+            # print(myiids)
             for myiid in myiids:
                 values=self.treeview.set(myiid)
                 headers=['Matricule','Noms','Prénoms']
                 test=[]
                 for header in headers:
-                    test.append(characters not in values[header])
+                    # added lower
+                    test.append(characters not in values[header].lower())
                 if all(test):
                         self.treeview.delete(myiid)
 
