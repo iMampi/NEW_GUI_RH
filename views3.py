@@ -250,7 +250,6 @@ class ViewAll(tk.Toplevel):
 
     def myfilter(self,*args):
         #fixme : optimize maybe
-        #fixme  : it is case sensitive. make it so it is not
 
         init_iids=self.treeview.get_children()
         for iid in init_iids:
