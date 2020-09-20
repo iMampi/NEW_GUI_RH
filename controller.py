@@ -63,13 +63,23 @@ class MyRoot(tk.Tk):
         #print(self.MyMainFrame.w)
         #print(self.MyMainFrame.h)
 
-    def save_(self,rownum=self.current_index):
+    def save_(self):
         #todo : finalize the save with rownum and saving only the row
+        rownum = self.current_index
         mydata=self.MyMainFrame.MyViewFrame.get()
-
-        # mycsv=m.MyInfos("mydb.csv")
         print("récupération des données")
-        self.mycsv.save_record(mydata,rownum=rownum)
+        print(mydata)
+
+        if rownum == None:
+            self.mycsv.save_record(mydata, rownum=rownum)
+        else:
+            for header,value in mydata.items():
+                self.data[rownum][header] = value
+
+            self.mycsv.save_record(self.data, rownum=rownum)
+
+
+        # self.mycsv.save_record(mydata,rownum=rownum)
         print ("Sauvegardé")
         self.MyMainFrame.MyViewFrame.reset()
 

@@ -266,6 +266,15 @@ class MyInfos:
                 csvwriter.writerow(data)
         else:
             #todo : saving a modification on old entry
+            with open(self.filename, 'w',newline='') as fh:
+                csvwriter = csv.DictWriter(fh,
+                                           fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
+                                           delimiter=";"
+                                           )
+                csvwriter.writeheader()
+                for row_data in data:
+                    csvwriter.writerow(row_data)
+
             pass
 
     def load_records(self, rownum=None):
