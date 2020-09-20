@@ -174,8 +174,9 @@ class SelectFrame(tk.Frame):
         self.s_entry.grid(row=1,column=0)
 
         #Todo:create and associate the command
-        self.s_bt=ttk.Button(self,text="Voir")
-        self.s_bt.grid(row=1,column=1)
+        ##WE DONT NEET IT ANYMORE FOR NOW
+        # self.s_bt=ttk.Button(self,text="Voir")
+        # self.s_bt.grid(row=1,column=1)
 
 
 class ViewAll(tk.Toplevel):
@@ -227,6 +228,7 @@ class ViewAll(tk.Toplevel):
                                      columns=[*self.headers],height=100)
         self.treeview.heading('#0',text="Ligne")
         self.treeview.column('#0',minwidth=40,width=40,stretch=True)
+        #todo : remove the first column '#0'
         for header in self.headers:
             self.treeview.heading(header,text=header)
             self.treeview.column(header, minwidth=40, width=80,stretch=True)
@@ -287,8 +289,6 @@ class ViewAll(tk.Toplevel):
         self.data_form=values
 
         return values
-
-
 
 
 

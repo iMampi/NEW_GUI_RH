@@ -328,11 +328,17 @@ class MyActionButtons:
                 "callback" : "Next"
                         },
         "Sauvegarder":{"creation" : True,
-                "consultation" : True,
+                "consultation" : False,
                 "modification" : True,
                 "fire": True,
                 "callback" : "Save"
                         },
+        "Editer": {"creation": False,
+                    "consultation": True,
+                    "modification": False,
+                    "fire": False,
+                    "callback": "Edit"
+                    },
             }
     
         

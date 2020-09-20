@@ -21,7 +21,8 @@ class MyRoot(tk.Tk):
                         "creation":self.mode_creation,
                         "consultation":self.mode_consultation,
                         "modification":self.mode_modification,
-                        "fire":self.mode_fire
+                        "fire":self.mode_fire,
+                        "Edit":self.edit_
                         }
         self.MyMainFrame=None
 
@@ -62,13 +63,13 @@ class MyRoot(tk.Tk):
         #print(self.MyMainFrame.w)
         #print(self.MyMainFrame.h)
 
-    def save_(self):
-
+    def save_(self,current_index):
+        #todo : finalize the save with rownum and saving only the row
         mydata=self.MyMainFrame.MyViewFrame.get()
 
         # mycsv=m.MyInfos("mydb.csv")
         print("récupération des données")
-        self.mycsv.save_record(mydata)
+        self.mycsv.save_record(mydata,rownum=current_index)
         print ("Sauvegardé")
         self.MyMainFrame.MyViewFrame.reset()
 
@@ -80,6 +81,12 @@ class MyRoot(tk.Tk):
     def next_(self):
         self.current_index = self.current_index + 1
         self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
+
+    def edit_(self):
+        self.MyMainFrame.MyViewFrame.destroy()
+        self.mode="modification"
+        self.construction(myindex=self.current_index)
+
 
 
         pass
@@ -106,6 +113,7 @@ class MyRoot(tk.Tk):
 
     def mode_creation(self):
         self.MyMainFrame.MyViewFrame.destroy()
+        self.current_index=None
         print("creation")
         self.mode="creation"
         self.construction()
