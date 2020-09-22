@@ -202,7 +202,7 @@ class ValidMatricule(ValidateMixin,ttk.Entry):
 
          
 #TODO : implémenter les dialogbox
-#TODO : intégrer les messages d'erreur dde validation
+#TODO : intégrer les messages d'erreur dans dialogbox
 
 #TODO : implement the img downloader annd imge widget displayer
 class LabelInput(tk.Frame):

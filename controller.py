@@ -64,7 +64,6 @@ class MyRoot(tk.Tk):
         #print(self.MyMainFrame.h)
 
     def save_(self):
-        #todo : finalize the save with rownum and saving only the row
         rownum = self.current_index
         mydata=self.MyMainFrame.MyViewFrame.get()
         print("récupération des données")
@@ -72,15 +71,15 @@ class MyRoot(tk.Tk):
 
         if rownum == None:
             self.mycsv.save_record(mydata, rownum=rownum)
+            print("Sauvegardé")
         else:
             for header,value in mydata.items():
                 self.data[rownum][header] = value
 
             self.mycsv.save_record(self.data, rownum=rownum)
-
+            print("Sauvegardé")
 
         # self.mycsv.save_record(mydata,rownum=rownum)
-        print ("Sauvegardé")
         self.MyMainFrame.MyViewFrame.reset()
 
     def previous_(self):
@@ -130,6 +129,8 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.set(self.mycsv.new_matricule())
 
     def mode_consultation(self):
+        self.MyMainFrame.MyViewFrame.destroy()
+
         self.mode = "consultation"
         self.MyTreeview()
         #self.MyMainFrame.MyViewFrame.destroy()
@@ -137,18 +138,21 @@ class MyRoot(tk.Tk):
 
     def mode_modification(self):
         #FIXME : pour self mode changing first everywhere
-        self.mode = "modification"
-
         self.MyMainFrame.MyViewFrame.destroy()
+        self.mode = "modification"
+        self.MyTreeview()
         print("modification")
-
-        self.construction()
+        #self.MyMainFrame.MyViewFrame.destroy()
+        # self.construction()
 
     def mode_fire(self):
         self.MyMainFrame.MyViewFrame.destroy()
-        print("fire")
         self.mode="fire"
-        self.construction()
+        self.MyTreeview()
+
+        # self.MyMainFrame.MyViewFrame.destroy()
+        print("fire")
+        #self.construction()
 
 
 

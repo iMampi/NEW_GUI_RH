@@ -42,13 +42,15 @@ class MyViewFrame(tk.Frame):
         elif self.mode is "fire":
             for field in m.MyInfos.data.keys():
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
-                    x = w.LabelInput(self, mode=self.mode, label=field)
+                    self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
                     # changer en ref to data>type>widget type pour le cas image
                     # self.grid_propagate(0)
-                    x.grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
+                    self.inputs[field].grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=100)
-                    self.inputs[field] = x.MyInput
+        print("self.inputs : ")
+
+        print(self.inputs)
 
 
 
