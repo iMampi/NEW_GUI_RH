@@ -5,6 +5,7 @@ import base_ex as m
 import tkinter.font as tkf
 
 #TODO: add frame to view pictures
+#todo: replace all self.mode by juste "mode"
 
 class MyViewFrame(tk.Frame):
     def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
@@ -48,11 +49,6 @@ class MyViewFrame(tk.Frame):
                     self.inputs[field].grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=100)
-        print("self.inputs : ")
-
-        print(self.inputs)
-
-
 
     def grid(self,**kwargs):
         super().grid(**kwargs)
@@ -72,6 +68,63 @@ class MyViewFrame(tk.Frame):
 
         #todo : insert dialog box
         print('RESET')
+
+    def set(self,data_dict):
+        print("trying to set")
+        for key,new_data in data_dict.items():
+            try:
+                self.inputs[key].set(new_data)
+            except KeyError:
+                pass
+
+class MyCongeFrame(tk.Frame):
+    def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+        self.mode = mode
+        self.inputs = {}
+        self.callbacks = callbacks
+        self.LabelsFrame = tk.Frame(self)
+        self.EntriesFrame = tk.Frame(self)
+
+        titles_font = tkf.Font(size=15, weight="bold")
+        BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=titles_font)
+        BigTitle.grid(row=0, column=0, sticky="nswe", columnspan=2, rowspan=1)
+
+        if mode:
+            #self.LabelsFrame.grid_propagate(False)
+            self.LabelsFrame.grid(row=1,column=0,sticky="nswe")
+            self.EntriesFrame.grid(row=1,column=1,sticky="nswe")
+            self.LabelsFrame.columnconfigure(0,weight=1,minsize=100)
+            self.EntriesFrame.columnconfigure(0,weight=1,minsize=150)
+            self.EntriesFrame.columnconfigure(1, weight=1, minsize=100)
+
+        # print("self.mode : ")
+        # print(self.mode)
+        for field in m.MyConges.data.keys():
+            if m.MyConges.data[field].get(self.mode)["mode"] == True:
+                self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
+                # changer en ref to data>type>widget type pour le cas image
+                # self.grid_propagate(0)
+                self.inputs[field].grid(row=m.MyConges.data[field][self.mode]["row"], column=0)
+                self.columnconfigure(0, weight=0, minsize=100)
+                self.columnconfigure(1, weight=1, minsize=150)
+
+    def grid(self,**kwargs):
+        super().grid(**kwargs)
+
+    def get(self):
+        data={}
+        for key,widget in self.inputs.items():
+            print(key)
+            data[key]=widget.get()
+        print("data from get :")
+        print(data)
+        return data
+
+    def reset(self):
+        for widget in self.inputs.values():
+            widget.delete()
+        #todo : insert dialog box
 
     def set(self,data_dict):
         print("trying to set")
@@ -121,10 +174,35 @@ class MyMainFrame(tk.Frame):
         pw1.paneconfigure(pw2,sticky="nswe")
 
         #MYVIEWFRAME
-        if self.mode:
+        if self.mode in ["creation","modification","fire"]:
             self.MyViewFrame=MyViewFrame(pw2,callbacks=self.callbacks,mode=self.mode)
             pw2.paneconfigure(self.MyViewFrame, sticky="nswe")
 
+            # BOTTOM BUTTONS
+            ButtonsFrame = tk.Frame(pw2)
+            pw2.paneconfigure(ButtonsFrame, sticky="swe")
+            button_counter = 0
+            # add callback for bottom buttons later
+            for button in m.MyActionButtons.data.keys():
+                try:
+                    if m.MyActionButtons.data[button][self.mode]:
+                        bt = ttk.Button(
+                            ButtonsFrame,
+                            text=button,
+                            command=self.callbacks[m.MyActionButtons.data[button]["callback"]]
+                        )
+                        bt.grid(row=0, column=button_counter, sticky="nswe", columnspan=1, padx=2, pady=2)
+                        ButtonsFrame.columnconfigure(button_counter, weight=1)
+                        # pw2.paneconfigure(bt, sticky="swe")
+                        button_counter += 1
+                except:
+                    print("case of mode 'None' for {}".format(button))
+                    pass
+        elif self.mode in ["c_creation", "c_modification", "c_fire"]:
+            print("creaeting mycongeframe in paneview")
+            self.MyViewFrame = MyCongeFrame(pw2, callbacks=self.callbacks, mode=self.mode)
+            pw2.paneconfigure(self.MyViewFrame, sticky="nswe")
+            #todo : add buttons
             # BOTTOM BUTTONS
             ButtonsFrame = tk.Frame(pw2)
             pw2.paneconfigure(ButtonsFrame, sticky="swe")
@@ -312,16 +390,20 @@ class ViewAll(tk.Toplevel):
 
 
                 
-"""
+
 root=tk.Tk()
 callbacks={"Save":None,
             "Previous":None,
             "Next":None,
             "creation":None,
             "consultation":None,
-            "modification":None
+            "modification":None,
+           "fire":None,
+           "new_conge":None,
+           "see_conge":None,
+           "paie":None
             }
-MVF=MyMainFrame(root,mode="creation",callbacks=callbacks)
+MVF=MyMainFrame(root,mode="c_creation",callbacks=callbacks)
 MVF.pack()
 root.mainloop()
-"""
+

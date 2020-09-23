@@ -222,14 +222,17 @@ class LabelInput(tk.Frame):
         m.FieldTypes.string_matricule: {"type": tk.StringVar, "input_type": ValidMatricule}
         }
     
-    def __init__(self,parent,mode=None,label=None, MyInfos=m.MyInfos, **kwargs):
+    def __init__(self,parent,mode=None,label=None, **kwargs):
         super().__init__(parent,**kwargs)
         self.mode=mode
-        self.MyInfos=MyInfos
+        if self.mode in ["creation", "modification", "consultation"]:
+            self.MyInfos=m.MyInfos
+        else:
+            self.MyInfos=m.MyConges
 
         MyInfo=self.MyInfos.data.get(label,"Error 404")
         self.var_type = self.field_type[MyInfo['type']]["type"]()
-        input_class=self.field_type[MyInfo["type"]]["input_type"]
+        input_class = self.field_type[MyInfo["type"]]["input_type"]
 
 
 

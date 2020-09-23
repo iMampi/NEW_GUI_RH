@@ -5,6 +5,8 @@ import base_ex as m
 import views3 as v
 import time
 
+#todo change mode_[mode] to personnel_[mode]
+#todo add conge_[mode]
 
 class MyRoot(tk.Tk):
     def __init__(self,*args,**kwargs):
@@ -21,6 +23,9 @@ class MyRoot(tk.Tk):
                         "creation":self.mode_creation,
                         "consultation":self.mode_consultation,
                         "modification":self.mode_modification,
+                        "new_conge":self.new_conge,
+                        "see_conge": None,
+                        "paie": None,
                         "fire":self.mode_fire,
                         "Edit":self.edit_
                         }
@@ -63,6 +68,8 @@ class MyRoot(tk.Tk):
         #print(self.MyMainFrame.w)
         #print(self.MyMainFrame.h)
 
+
+
     def save_(self):
         rownum = self.current_index
         mydata=self.MyMainFrame.MyViewFrame.get()
@@ -83,13 +90,15 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.reset()
 
     def previous_(self):
+        #todo : add delimitation for when we reach the end or the start of the list, to disable the button
         self.current_index=self.current_index-1
         self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
-        pass
-    
+        print(self.current_index)
+
     def next_(self):
         self.current_index = self.current_index + 1
         self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
+        print(self.current_index)
 
     def edit_(self):
         self.MyMainFrame.MyViewFrame.destroy()
@@ -117,6 +126,13 @@ class MyRoot(tk.Tk):
                 self.TV.destroy()
                 break
 
+
+
+    def new_conge(self):
+        self.MyMainFrame.MyViewFrame.destroy()
+        self.current_index=None
+        self.mode="c_creation"
+        self.construction()
 
 
 
