@@ -131,8 +131,9 @@ class MyRoot(tk.Tk):
     def new_conge(self):
         self.MyMainFrame.MyViewFrame.destroy()
         self.current_index=None
-        self.mode="c_creation"
-        self.construction()
+        self.mode = "c_creation"
+        self.MyTreeview()
+
 
 
 

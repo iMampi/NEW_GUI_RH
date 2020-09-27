@@ -86,10 +86,14 @@ class MyCongeFrame(tk.Frame):
         self.LabelsFrame = tk.Frame(self)
         self.EntriesFrame = tk.Frame(self)
 
+        #Title at the top
         titles_font = tkf.Font(size=15, weight="bold")
         BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=titles_font)
         BigTitle.grid(row=0, column=0, sticky="nswe", columnspan=2, rowspan=1)
 
+
+
+        #Frame to receive Label(left) and Entry(right)
         if mode:
             #self.LabelsFrame.grid_propagate(False)
             self.LabelsFrame.grid(row=1,column=0,sticky="nswe")
@@ -98,8 +102,7 @@ class MyCongeFrame(tk.Frame):
             self.EntriesFrame.columnconfigure(0,weight=1,minsize=150)
             self.EntriesFrame.columnconfigure(1, weight=1, minsize=100)
 
-        # print("self.mode : ")
-        # print(self.mode)
+        #Generating line of label input to fill the frames above
         for field in m.MyConges.data.keys():
             if m.MyConges.data[field].get(self.mode)["mode"] == True:
                 self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
@@ -390,7 +393,7 @@ class ViewAll(tk.Toplevel):
 
 
                 
-
+"""
 root=tk.Tk()
 callbacks={"Save":None,
             "Previous":None,
@@ -406,4 +409,4 @@ callbacks={"Save":None,
 MVF=MyMainFrame(root,mode="c_creation",callbacks=callbacks)
 MVF.pack()
 root.mainloop()
-
+"""
