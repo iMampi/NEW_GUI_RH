@@ -339,6 +339,7 @@ class MyInfos:
         return {"Matricule":new_num}
 
 class MyConges:
+    #fixme : change he + with real value
     data={"Référence":{"csvheader":True,
                        "c_creation":{"mode":True,"row":0},
                        "c_consultation":{"mode":True,"row":0},
@@ -467,24 +468,32 @@ class MyActionButtons:
                 "consultation":True,
                 "modification":False,
                 "fire": False,
+                "c_creation":False,
+                "c_consultation":True,
                 "callback" : "Previous"
                         },
         "Suivant":{"creation":False,
                 "consultation":True,
                 "modification":False,
                 "fire": False,
+                "c_creation": False,
+                "c_consultation": True,
                 "callback" : "Next"
                         },
         "Sauvegarder":{"creation" : True,
                 "consultation" : False,
                 "modification" : True,
                 "fire": True,
+                "c_creation": True,
+                "c_consultation": False,
                 "callback" : "Save"
                         },
         "Editer": {"creation": False,
                     "consultation": True,
                     "modification": False,
                     "fire": False,
+                   "c_creation": False,
+                   "c_consultation": True,
                     "callback": "Edit"
                     },
             }
