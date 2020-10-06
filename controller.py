@@ -42,8 +42,6 @@ class MyRoot(tk.Tk):
             pass
         else:
             self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
-            # print('trying to print var for date de but for conge')
-            # print(self.MyMainFrame.MyViewFrame.inputs['Date de début'].var_type.get())
 
         self.MyMainFrame.grid(row=0,column=0,sticky="nswe")
 
@@ -167,41 +165,7 @@ class MyRoot(tk.Tk):
 
         # self.MyMainFrame.MyViewFrame.destroy()
         print("fire")
-        #self.construction()
 
-
-
-
-        #         # or another alternative
-        #         # current=self.treeview.item(self.treeview.focus())
-        #         values = self.treeview.set(current)
-        #         # return a dict of values from the selected row
-        #         return values
-
-
-
-    # def populate_form(self,*args):
-    #         current = v.ViewAll.treeview.selection()
-    #         # or another alternative
-    #         # current=self.treeview.item(self.treeview.focus())
-    #         values = self.treeview.set(current)
-    #         # return a dict of values from the selected row
-    #         return values
-    #
-    #
-    #
-    #
-    #
-    #     mat = v.ViewAll.get_values(*args)
-    #     for row in self.data:
-    #         if row['Matricule']==mat:
-    #             return row
-    #
-    #     # for v.MyMainFrame.MyViewFrame
-
-    
-
-        
 
 r=MyRoot()
 r.mainloop()

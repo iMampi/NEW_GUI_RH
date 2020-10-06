@@ -83,7 +83,6 @@ class MyCongeFrame(tk.Frame):
         self.callbacks = callbacks
         self.LabelsFrame = tk.Frame(self)
         self.EntriesFrame = tk.Frame(self)
-        # self.datedebut = None
         #Title at the top
         titles_font = tkf.Font(size=15, weight="bold")
         BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=titles_font)
@@ -102,11 +101,8 @@ class MyCongeFrame(tk.Frame):
         #Generating line of label input to fill the frames above
         for field in m.MyConges.data.keys():
             if m.MyConges.data[field].get(self.mode)["mode"] == True:
-                mykwargs={}
                 # todo : add treatment for fin de congé
-                # if field in ('Date de début','Début congé'):
-                    # mykwargs['datedebut']=self.datedebut
-                self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field,**mykwargs)
+                self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
                 # changer en ref to data>type>widget type pour le cas image
                 # self.grid_propagate(0)
                 self.inputs[field].grid(row=m.MyConges.data[field][self.mode]["row"], column=0)
@@ -115,15 +111,9 @@ class MyCongeFrame(tk.Frame):
 
         self.datedebut=self.inputs['Date de début'].var_type
         self.datedebut.trace('w',self._update_datedebut)
-        # print('self.datedebut :')
-        # print(self.datedebut)
-        # print(self.get())
 
     def _update_datedebut(self,*args):
         self.inputs['Début congé'].MyInput.datedebut = self.datedebut.get()
-        # self.inputs['Début congé']._update_datedebut(self.datedebut.get())
-        print('self.inputs[Début congé].datedebut :')
-        print(self.inputs['Début congé'].MyInput.datedebut )
 
     def grid(self,**kwargs):
         super().grid(**kwargs)

@@ -211,40 +211,23 @@ class ValidDateDebutConge(ValidateMixin,ttk.Entry):
     def __init__(self,parent,*args,**kwargs):
         super().__init__(parent,*args,**kwargs)
         self.datedebut=None
-        # if datedebut:
-        #     self.datedebut=datedebut
-            # self.datedebut.trace('w',_set_datedebut)
-
-    # def _getstartingdate(self):
-    #     startingdate=parent.inputs["Date de début"].get()
-    #     print(startingdate)
-    #     return startingdate
 
     def _focusout_validate(self, event):
         valid = True
-        print("trying to get starting date")
-        # sd=self._getstartingdate()
 
         if not self.get():
             valid = False
             self.error_var.set('Veuillez compléter : ')
 
         try:
-            print('widget labelinput datedebut :')
-            print(self.datedebut)
             debutconge=dt.datetime.strptime(self.get(),"%d/%m/%Y")
-            # todo : add condition to see if the type is conge and not permission
+            # todo : DONE BUT SEE FURTHER add condition to see if the type is conge and not permission
             if debutconge<=dt.datetime.strptime(self.datedebut,"%d/%m/%Y"):
-                self.error_var.set('Conge non Valide.')
+                self.error_var.set('Conge non valide.')
                 valid = False
         except ValueError:
-            self.error_var.set('Date non valide :')
+            self.error_var.set('Date non valide')
             valid=False
-
-        # if debutconge <= dt.datetime.strptime(self.datedebut, "%d/%m/%Y"):
-        #     self.error_var.set('Conge non Valide.')
-        #     valid=False
-
         return valid
 
     def _key_validate(self,action,index,char,**kwargs):
@@ -259,17 +242,6 @@ class ValidDateDebutConge(ValidateMixin,ttk.Entry):
             valid=False
         return valid
 
-    # def _set_datedebut(self):
-    #     current=self.datedebut.get()
-
-    def _update_datedebut(self,datedebut):
-        self.datedebut=datedebut
-
-
-
-
-
-         
 #TODO : implémenter les dialogbox
 #TODO : intégrer les messages d'erreur dans dialogbox
 
