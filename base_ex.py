@@ -14,6 +14,7 @@ class FieldTypes:
     string_mail = 10
     string_phone = 11
     string_matricule = 12
+    date_debut_conge = 13
 
 
 class MyLists:
@@ -356,63 +357,74 @@ class MyConges:
                      "c_creation":{"mode":True,"row":2},
                      "c_consultation":{"mode":True,"row":2},
                      "c_modification":{"mode":True,"row":2},
-                     "type":FieldTypes.string
+                     "type":FieldTypes.string,
+                        "state":"readonly"
                    },
           "Prénoms": {"csvheader":True,
                      "c_creation":{"mode":True,"row":3},
                      "c_consultation":{"mode":True,"row":3},
                      "c_modification":{"mode":True,"row":3},
+                      "state": "readonly",
                      "type":FieldTypes.string
                       },
+          "Date de début": {"csvheader": False,
+                            "c_creation": {"mode": True, "row": 4},
+                            "c_consultation": {"mode": True, "row": 4},
+                            "c_modification": {"mode": True, "row": 4},
+                            "type": FieldTypes.iso_date_string,
+                            "state": "readonly"
+                            },
           "Date de dépôt":{"csvheader":True,
-                     "c_creation":{"mode":True,"row":2+2},
-                     "c_consultation":{"mode":True,"row":2+2},
-                     "c_modification":{"mode":True,"row":2+2},
+                     "c_creation":{"mode":True,"row":2+3},
+                     "c_consultation":{"mode":True,"row":2+3},
+                     "c_modification":{"mode":True,"row":2+3},
                      "type":FieldTypes.iso_date_string
                            },
           "Début congé":{"csvheader":True,
-                     "c_creation":{"mode":True,"row":2+2},
-                     "c_consultation":{"mode":True,"row":2+2},
-                     "c_modification":{"mode":True,"row":2+2},
-                     "type":FieldTypes.iso_date_string
+                     "c_creation":{"mode":True,"row":2+3},
+                     "c_consultation":{"mode":True,"row":2+3},
+                     "c_modification":{"mode":True,"row":2+3},
+                     "type":FieldTypes.date_debut_conge
                            },
           "Fin congé":{"csvheader":True,
-                     "c_creation":{"mode":True,"row":3+2},
-                     "c_consultation":{"mode":True,"row":3+2},
-                     "c_modification":{"mode":True,"row":3+2},
+                     "c_creation":{"mode":True,"row":3+3},
+                     "c_consultation":{"mode":True,"row":3+3},
+                     "c_modification":{"mode":True,"row":3+3},
                      "type":FieldTypes.iso_date_string
                          },
           "Motif":{"csvheader":True,
-                     "c_creation":{"mode":True,"row":4+2},
-                     "c_consultation":{"mode":True,"row":4+2},
-                     "c_modification":{"mode":True,"row":4+2},
+                     "c_creation":{"mode":True,"row":4+3},
+                     "c_consultation":{"mode":True,"row":4+3},
+                     "c_modification":{"mode":True,"row":4+3},
                      "type":FieldTypes.string
                    },
           "type": {"csvheader": True,
-                    "c_creation": {"mode": True, "row": 5+2},
-                    "c_consultation": {"mode": True, "row": 5+2},
-                    "c_modification": {"mode": True, "row": 5+2},
+                    "c_creation": {"mode": True, "row": 5+3},
+                    "c_consultation": {"mode": True, "row": 5+3},
+                    "c_modification": {"mode": True, "row": 5+3},
                     "type": FieldTypes.string_list,
                     "values":MyLists.type_conge_list
                     },
           "Jours de congés":{"csvheader":True,
-                     "c_creation":{"mode":True,"row":6+2},
-                     "c_consultation":{"mode":True,"row":6+2},
-                     "c_modification":{"mode":True,"row":6+2},
+                     "c_creation":{"mode":True,"row":6+3},
+                     "c_consultation":{"mode":True,"row":6+3},
+                     "c_modification":{"mode":True,"row":6+3},
                      "type":FieldTypes.decimal
                    },
           "Solde initial théorique": {"csvheader": True,
-                                      "c_creation": {"mode": True, "row": 7+2},
-                                      "c_consultation": {"mode": True, "row": 7+2},
-                                      "c_modification": {"mode": True, "row": 7+2},
+                                      "c_creation": {"mode": True, "row": 7+3},
+                                      "c_consultation": {"mode": True, "row": 7+3},
+                                      "c_modification": {"mode": True, "row": 7+3},
                                       "type": FieldTypes.decimal
                                       },
           "Solde final théorique":{"csvheader":True,
-                     "c_creation":{"mode":True,"row":8+2},
-                     "c_consultation":{"mode":True,"row":8+2},
-                     "c_modification":{"mode":True,"row":8+2},
+                     "c_creation":{"mode":True,"row":8+3},
+                     "c_consultation":{"mode":True,"row":8+3},
+                     "c_modification":{"mode":True,"row":8+3},
                      "type":FieldTypes.decimal
-                   }
+                   },
+
+
           }
 
     def __init__(self, filename):

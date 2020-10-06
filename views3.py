@@ -4,8 +4,10 @@ import widgets_3 as w
 import base_ex as m
 import tkinter.font as tkf
 
-#TODO: add frame to view pictures
-#todo: replace all self.mode by juste "mode"
+# TODO: add frame to view pictures
+# todo: replace all self.mode by juste "mode"
+# todo: for c_creation : matricule deveint liste. metttre un trace sur matricule qui mettra à jour
+# automatiquement les champs noms et prenoms
 
 class MyViewFrame(tk.Frame):
     def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
@@ -22,15 +24,12 @@ class MyViewFrame(tk.Frame):
         BigTitle.grid(row=0, column=0, sticky="nswe", columnspan=2, rowspan=1)
         
         if mode:
-            #self.LabelsFrame.grid_propagate(False)
             self.LabelsFrame.grid(row=1,column=0,sticky="nswe")
             self.EntriesFrame.grid(row=1,column=1,sticky="nswe")
             self.LabelsFrame.columnconfigure(0,weight=1,minsize=100)
             self.EntriesFrame.columnconfigure(0,weight=1,minsize=150)
             self.EntriesFrame.columnconfigure(1, weight=1, minsize=100)
 
-        #counter = 0
-        # a reformuler
         if self.mode in ["creation", "modification", "consultation"]:
             for field in m.MyInfos.data.keys():
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
@@ -45,7 +44,6 @@ class MyViewFrame(tk.Frame):
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
                     self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
                     # changer en ref to data>type>widget type pour le cas image
-                    # self.grid_propagate(0)
                     self.inputs[field].grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=100)
@@ -78,14 +76,14 @@ class MyViewFrame(tk.Frame):
                 pass
 
 class MyCongeFrame(tk.Frame):
-    def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
+    def __init__(self, parent, *args, mode=None, callbacks=None, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.mode = mode
         self.inputs = {}
         self.callbacks = callbacks
         self.LabelsFrame = tk.Frame(self)
         self.EntriesFrame = tk.Frame(self)
-
+        # self.datedebut = None
         #Title at the top
         titles_font = tkf.Font(size=15, weight="bold")
         BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=titles_font)
@@ -95,7 +93,6 @@ class MyCongeFrame(tk.Frame):
 
         #Frame to receive Label(left) and Entry(right)
         if mode:
-            #self.LabelsFrame.grid_propagate(False)
             self.LabelsFrame.grid(row=1,column=0,sticky="nswe")
             self.EntriesFrame.grid(row=1,column=1,sticky="nswe")
             self.LabelsFrame.columnconfigure(0,weight=1,minsize=100)
@@ -105,15 +102,28 @@ class MyCongeFrame(tk.Frame):
         #Generating line of label input to fill the frames above
         for field in m.MyConges.data.keys():
             if m.MyConges.data[field].get(self.mode)["mode"] == True:
-                self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
+                mykwargs={}
+                # todo : add treatment for fin de congé
+                # if field in ('Date de début','Début congé'):
+                    # mykwargs['datedebut']=self.datedebut
+                self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field,**mykwargs)
                 # changer en ref to data>type>widget type pour le cas image
                 # self.grid_propagate(0)
                 self.inputs[field].grid(row=m.MyConges.data[field][self.mode]["row"], column=0)
                 self.columnconfigure(0, weight=0, minsize=100)
                 self.columnconfigure(1, weight=1, minsize=150)
 
-        #add save bouton
+        self.datedebut=self.inputs['Date de début'].var_type
+        self.datedebut.trace('w',self._update_datedebut)
+        # print('self.datedebut :')
+        # print(self.datedebut)
+        # print(self.get())
 
+    def _update_datedebut(self,*args):
+        self.inputs['Début congé'].MyInput.datedebut = self.datedebut.get()
+        # self.inputs['Début congé']._update_datedebut(self.datedebut.get())
+        print('self.inputs[Début congé].datedebut :')
+        print(self.inputs['Début congé'].MyInput.datedebut )
 
     def grid(self,**kwargs):
         super().grid(**kwargs)
@@ -121,10 +131,10 @@ class MyCongeFrame(tk.Frame):
     def get(self):
         data={}
         for key,widget in self.inputs.items():
-            print(key)
+            # print(key)
             data[key]=widget.get()
-        print("data from get :")
-        print(data)
+        # print("data from get :")
+        # print(data)
         return data
 
     def reset(self):
@@ -139,6 +149,7 @@ class MyCongeFrame(tk.Frame):
                 self.inputs[key].set(new_data)
             except KeyError:
                 pass
+
 
 
 class MySideFrame(tk.Frame):

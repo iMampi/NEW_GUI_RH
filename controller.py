@@ -42,18 +42,13 @@ class MyRoot(tk.Tk):
             pass
         else:
             self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
+            # print('trying to print var for date de but for conge')
+            # print(self.MyMainFrame.MyViewFrame.inputs['Date de début'].var_type.get())
 
         self.MyMainFrame.grid(row=0,column=0,sticky="nswe")
-        #self.MyMainFrame.propagate()
-        
-        self.MyMainFrame.update_idletasks()
-        #self.MyMainFrame.configure(width=self.MyMainFrame.w,height=self.MyMainFrame.h)
-        self.MyMainFrame.update_idletasks()
-        #self.MyMainFrame.propagate(0)
-        #self.MyMainFrame.pw1.configure(height=self.MyMainFrame.h)
 
-        #we set minimum size. we can shrink and expand but it wont go beyond this min size.
-
+        self.MyMainFrame.update_idletasks()
+        self.MyMainFrame.update_idletasks()
 
         self.columnconfigure(0,weight=1)
         self.rowconfigure(0,weight=1)
@@ -64,6 +59,8 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.update_idletasks()
         print(self.MyMainFrame.MyViewFrame.winfo_geometry())
         print(self.MyMainFrame.winfo_geometry())
+        # print('trying to print var')
+        # print(self.MyMainFrame.MyViewFrame.inputs)
 
         #print(self.MyMainFrame.w)
         #print(self.MyMainFrame.h)
@@ -133,6 +130,7 @@ class MyRoot(tk.Tk):
         self.current_index=None
         self.mode = "c_creation"
         self.MyTreeview()
+
 
 
 
