@@ -398,7 +398,7 @@ class MyConges:
                      "c_modification":{"mode":True,"row":4+3},
                      "type":FieldTypes.string
                    },
-          "type": {"csvheader": True,
+          "Type": {"csvheader": True,
                     "c_creation": {"mode": True, "row": 5+3},
                     "c_consultation": {"mode": True, "row": 5+3},
                     "c_modification": {"mode": True, "row": 5+3},

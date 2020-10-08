@@ -4,6 +4,7 @@ import base_ex as m
 import datetime as dt
 from dateutil.relativedelta import relativedelta
 #TODO : bind keyTab with tk.text to change widget instead of 4spaces
+#todo : jour de congés  automatique mise à jour quand debut et fin sont complété
 
 class ValidateMixin :
     def __init__(self,*args,error_var=None, **kwargs) :
@@ -283,7 +284,7 @@ class LabelInput(tk.Frame):
         input_args={}
         label_args={}
         error_args = {}
-        if self.mode=="creation":
+        if self.mode in ["creation","c_creation"]:
             if MyInfo.get("values",None):
                input_args["values"]=MyInfo.get("values",None)
         if self.mode=="consultation":

@@ -3,6 +3,7 @@ from tkinter import ttk
 import widgets_3 as w
 import base_ex as m
 import tkinter.font as tkf
+import datetime as dt
 
 # TODO: add frame to view pictures
 # todo: replace all self.mode by juste "mode"
@@ -88,8 +89,6 @@ class MyCongeFrame(tk.Frame):
         BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=titles_font)
         BigTitle.grid(row=0, column=0, sticky="nswe", columnspan=2, rowspan=1)
 
-
-
         #Frame to receive Label(left) and Entry(right)
         if mode:
             self.LabelsFrame.grid(row=1,column=0,sticky="nswe")
@@ -109,8 +108,45 @@ class MyCongeFrame(tk.Frame):
                 self.columnconfigure(0, weight=0, minsize=100)
                 self.columnconfigure(1, weight=1, minsize=150)
 
+        #set trace on datedebut(of contract) so we know when a employee cant take a day off
         self.datedebut=self.inputs['Date de début'].var_type
         self.datedebut.trace('w',self._update_datedebut)
+
+        #automatic update when debut de conge et fin conge are both filled
+        debut_conge=self.inputs['Début congé'].var_type
+        fin_conge=self.inputs['Fin congé'].var_type
+        debut_conge.trace('w',self._counting_conge)
+        fin_conge.trace('w', self._counting_conge)
+
+    def _counting_conge(self,*args):
+        debut_conge = self.inputs['Début congé'].var_type.get()
+        fin_conge = self.inputs['Fin congé'].var_type.get()
+        self.inputs['Jours de congés'].MyInput.error_var.set('')
+        self.inputs['Jours de congés'].var_type.set(0.0)
+
+        if len(debut_conge) == 10 and len(fin_conge) == 10:
+            try :
+                date01 = dt.datetime.strptime(debut_conge,"%d/%m/%Y")
+                date02 = dt.datetime.strptime(fin_conge, "%d/%m/%Y")
+                nbconge=date02-date01
+                if nbconge.days<0 :
+                    # todo : make the text go red when an error is detected
+                    self.inputs['Jours de congés'].MyInput.error_var.set('Date du congé non valide')
+                else:
+                    self.inputs['Jours de congés'].var_type.set(float(nbconge.days))
+            except ValueError:
+                #todo : make it so that error_var is updated as it should from here
+                #todo : nb de dayoff à comparer avec solde
+                #todo : make the text go red when an error is detected
+                self.inputs['Jours de congés'].MyInput.error_var.set('Date du congé non valide')
+                # should it still be there? valid=False
+
+
+
+
+
+
+
 
     def _update_datedebut(self,*args):
         self.inputs['Début congé'].MyInput.datedebut = self.datedebut.get()
