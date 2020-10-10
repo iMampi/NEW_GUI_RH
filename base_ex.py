@@ -427,10 +427,18 @@ class MyConges:
 
           }
 
-    def __init__(self, filename):
-        self.filename = "conge.csv"
+    def __init__(self):
+        self.filename_base_conge = "conge.csv"
+        self.filename_recap_conge = "recap_conge.csv"
 
-    def save_record(self, data):
+    def _open_recap(self):
+        #todo : add if file is missing,so it is new, must create new one
+        with open(self.filename_recap_conge, 'r', newline='') as fh:
+            csvreader = csv.DictReader(fh,delimiter=";")
+            data = list(csvreader)
+            return data
+
+    def save_record_base(self, data):
         """We only add new entry. there will be no way to update manually"""
         #todo anticipate a way to to update jour de congé consommé pour les jours déposer d'avantage alors que
         # soudainement un jour déclaré férié par les autorités
@@ -438,7 +446,7 @@ class MyConges:
         newfile= not os.path.exists(self.filename)
 
         #saving a new entry
-        with open(self.filename, 'a',newline='') as fh:
+        with open(self.filename_base_conge, 'a',newline='') as fh:
             csvwriter = csv.DictWriter(fh,
                                        fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
                                        delimiter=";"
@@ -446,6 +454,7 @@ class MyConges:
             if newfile:
                 csvwriter.writeheader()
             csvwriter.writerow(data)
+
 
 
 
