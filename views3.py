@@ -121,6 +121,7 @@ class MyCongeFrame(tk.Frame):
     def _counting_conge(self,*args):
         debut_conge = self.inputs['Début congé'].var_type.get()
         fin_conge = self.inputs['Fin congé'].var_type.get()
+        #we reset those field each time we try to change debut congé or fin congé
         self.inputs['Jours de congés'].MyInput.error_var.set('')
         self.inputs['Jours de congés'].var_type.set(0.0)
 
