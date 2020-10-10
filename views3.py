@@ -3,8 +3,12 @@ from tkinter import ttk
 import widgets_3 as w
 import base_ex as m
 import tkinter.font as tkf
+import datetime as dt
 
-#TODO: add frame to view pictures
+# TODO: add frame to view pictures
+# todo: replace all self.mode by juste "mode"
+# todo: for c_creation : matricule deveint liste. metttre un trace sur matricule qui mettra à jour
+# automatiquement les champs noms et prenoms
 
 class MyViewFrame(tk.Frame):
     def __init__(self, parent, mode=None, callbacks=None, *args, **kwargs):
@@ -21,15 +25,12 @@ class MyViewFrame(tk.Frame):
         BigTitle.grid(row=0, column=0, sticky="nswe", columnspan=2, rowspan=1)
         
         if mode:
-            #self.LabelsFrame.grid_propagate(False)
             self.LabelsFrame.grid(row=1,column=0,sticky="nswe")
             self.EntriesFrame.grid(row=1,column=1,sticky="nswe")
             self.LabelsFrame.columnconfigure(0,weight=1,minsize=100)
             self.EntriesFrame.columnconfigure(0,weight=1,minsize=150)
             self.EntriesFrame.columnconfigure(1, weight=1, minsize=100)
 
-        #counter = 0
-        # a reformuler
         if self.mode in ["creation", "modification", "consultation"]:
             for field in m.MyInfos.data.keys():
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
@@ -44,15 +45,9 @@ class MyViewFrame(tk.Frame):
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
                     self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
                     # changer en ref to data>type>widget type pour le cas image
-                    # self.grid_propagate(0)
                     self.inputs[field].grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=100)
-        print("self.inputs : ")
-
-        print(self.inputs)
-
-
 
     def grid(self,**kwargs):
         super().grid(**kwargs)
@@ -80,6 +75,108 @@ class MyViewFrame(tk.Frame):
                 self.inputs[key].set(new_data)
             except KeyError:
                 pass
+
+class MyCongeFrame(tk.Frame):
+    def __init__(self, parent, *args, mode=None, callbacks=None, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+        self.mode = mode
+        self.inputs = {}
+        self.callbacks = callbacks
+        self.LabelsFrame = tk.Frame(self)
+        self.EntriesFrame = tk.Frame(self)
+        #Title at the top
+        titles_font = tkf.Font(size=15, weight="bold")
+        BigTitle=tk.Label(self,text=m.MyTitles.data[self.mode],height=1,font=titles_font)
+        BigTitle.grid(row=0, column=0, sticky="nswe", columnspan=2, rowspan=1)
+
+        #Frame to receive Label(left) and Entry(right)
+        if mode:
+            self.LabelsFrame.grid(row=1,column=0,sticky="nswe")
+            self.EntriesFrame.grid(row=1,column=1,sticky="nswe")
+            self.LabelsFrame.columnconfigure(0,weight=1,minsize=100)
+            self.EntriesFrame.columnconfigure(0,weight=1,minsize=150)
+            self.EntriesFrame.columnconfigure(1, weight=1, minsize=100)
+
+        #Generating line of label input to fill the frames above
+        for field in m.MyConges.data.keys():
+            if m.MyConges.data[field].get(self.mode)["mode"] == True:
+                # todo : add treatment for fin de congé
+                self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
+                # changer en ref to data>type>widget type pour le cas image
+                # self.grid_propagate(0)
+                self.inputs[field].grid(row=m.MyConges.data[field][self.mode]["row"], column=0)
+                self.columnconfigure(0, weight=0, minsize=100)
+                self.columnconfigure(1, weight=1, minsize=150)
+
+        #set trace on datedebut(of contract) so we know when a employee cant take a day off
+        self.datedebut=self.inputs['Date de début'].var_type
+        self.datedebut.trace('w',self._update_datedebut)
+
+        #automatic update when debut de conge et fin conge are both filled
+        debut_conge=self.inputs['Début congé'].var_type
+        fin_conge=self.inputs['Fin congé'].var_type
+        debut_conge.trace('w',self._counting_conge)
+        fin_conge.trace('w', self._counting_conge)
+
+    def _counting_conge(self,*args):
+        debut_conge = self.inputs['Début congé'].var_type.get()
+        fin_conge = self.inputs['Fin congé'].var_type.get()
+        #we reset those field each time we try to change debut congé or fin congé
+        self.inputs['Jours de congés'].MyInput.error_var.set('')
+        self.inputs['Jours de congés'].var_type.set(0.0)
+
+        if len(debut_conge) == 10 and len(fin_conge) == 10:
+            try :
+                date01 = dt.datetime.strptime(debut_conge,"%d/%m/%Y")
+                date02 = dt.datetime.strptime(fin_conge, "%d/%m/%Y")
+                nbconge=date02-date01
+                if nbconge.days<0 :
+                    # todo : make the text go red when an error is detected
+                    self.inputs['Jours de congés'].MyInput.error_var.set('Date du congé non valide')
+                else:
+                    self.inputs['Jours de congés'].var_type.set(float(nbconge.days))
+            except ValueError:
+                #todo : make it so that error_var is updated as it should from here
+                #todo : nb de dayoff à comparer avec solde
+                #todo : make the text go red when an error is detected
+                self.inputs['Jours de congés'].MyInput.error_var.set('Date du congé non valide')
+                # should it still be there? valid=False
+
+
+
+
+
+
+
+
+    def _update_datedebut(self,*args):
+        self.inputs['Début congé'].MyInput.datedebut = self.datedebut.get()
+
+    def grid(self,**kwargs):
+        super().grid(**kwargs)
+
+    def get(self):
+        data={}
+        for key,widget in self.inputs.items():
+            # print(key)
+            data[key]=widget.get()
+        # print("data from get :")
+        # print(data)
+        return data
+
+    def reset(self):
+        for widget in self.inputs.values():
+            widget.delete()
+        #todo : insert dialog box
+
+    def set(self,data_dict):
+        print("trying to set")
+        for key,new_data in data_dict.items():
+            try:
+                self.inputs[key].set(new_data)
+            except KeyError:
+                pass
+
 
 
 class MySideFrame(tk.Frame):
@@ -121,10 +218,35 @@ class MyMainFrame(tk.Frame):
         pw1.paneconfigure(pw2,sticky="nswe")
 
         #MYVIEWFRAME
-        if self.mode:
+        if self.mode in ["creation","modification","fire"]:
             self.MyViewFrame=MyViewFrame(pw2,callbacks=self.callbacks,mode=self.mode)
             pw2.paneconfigure(self.MyViewFrame, sticky="nswe")
 
+            # BOTTOM BUTTONS
+            ButtonsFrame = tk.Frame(pw2)
+            pw2.paneconfigure(ButtonsFrame, sticky="swe")
+            button_counter = 0
+            # add callback for bottom buttons later
+            for button in m.MyActionButtons.data.keys():
+                try:
+                    if m.MyActionButtons.data[button][self.mode]:
+                        bt = ttk.Button(
+                            ButtonsFrame,
+                            text=button,
+                            command=self.callbacks[m.MyActionButtons.data[button]["callback"]]
+                        )
+                        bt.grid(row=0, column=button_counter, sticky="nswe", columnspan=1, padx=2, pady=2)
+                        ButtonsFrame.columnconfigure(button_counter, weight=1)
+                        # pw2.paneconfigure(bt, sticky="swe")
+                        button_counter += 1
+                except:
+                    print("case of mode 'None' for {}".format(button))
+                    pass
+        elif self.mode in ["c_creation", "c_modification", "c_fire"]:
+            print("creaeting mycongeframe in paneview")
+            self.MyViewFrame = MyCongeFrame(pw2, callbacks=self.callbacks, mode=self.mode)
+            pw2.paneconfigure(self.MyViewFrame, sticky="nswe")
+            #todo : add buttons
             # BOTTOM BUTTONS
             ButtonsFrame = tk.Frame(pw2)
             pw2.paneconfigure(ButtonsFrame, sticky="swe")
@@ -319,9 +441,13 @@ callbacks={"Save":None,
             "Next":None,
             "creation":None,
             "consultation":None,
-            "modification":None
+            "modification":None,
+           "fire":None,
+           "new_conge":None,
+           "see_conge":None,
+           "paie":None
             }
-MVF=MyMainFrame(root,mode="creation",callbacks=callbacks)
+MVF=MyMainFrame(root,mode="c_creation",callbacks=callbacks)
 MVF.pack()
 root.mainloop()
 """

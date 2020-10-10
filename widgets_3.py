@@ -4,6 +4,7 @@ import base_ex as m
 import datetime as dt
 from dateutil.relativedelta import relativedelta
 #TODO : bind keyTab with tk.text to change widget instead of 4spaces
+#todo : jour de congés  automatique mise à jour quand debut et fin sont complété
 
 class ValidateMixin :
     def __init__(self,*args,error_var=None, **kwargs) :
@@ -74,13 +75,21 @@ class ValidEntry(ValidateMixin,ttk.Entry):
 
 #todo mmake a better key valid for dates - months and days
 class ValidDate(ValidateMixin,ttk.Entry):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        # if datedebut:
+        #     self.datedebut=datedebut
+
+        self.variable = kwargs.get('textvariable') or tk.StringVar
+
     def _focusout_validate(self, event):
         valid = True
         if not self.get():
             valid = False
             self.error_var.set('Veuillez compléter.')
         try:
-            dt.datetime.strptime(self.get(),"%d/%m/%Y")
+            mydate=dt.datetime.strptime(self.get(),"%d/%m/%Y")
+            # self.datedebut.set(mydate)
         except ValueError:
             self.error_var.set('Date non valide.')
             valid=False
@@ -198,9 +207,42 @@ class ValidMatricule(ValidateMixin,ttk.Entry):
             self.error_var.set('Matricule non valide.')
         return valid
 
+class ValidDateDebutConge(ValidateMixin,ttk.Entry):
+    # todo : finish the implementation of date debut vs debut conge
+    def __init__(self,parent,*args,**kwargs):
+        super().__init__(parent,*args,**kwargs)
+        self.datedebut=None
 
+    def _focusout_validate(self, event):
+        valid = True
 
-         
+        if not self.get():
+            valid = False
+            self.error_var.set('Veuillez compléter : ')
+
+        try:
+            debutconge=dt.datetime.strptime(self.get(),"%d/%m/%Y")
+            # todo : DONE BUT SEE FURTHER add condition to see if the type is conge and not permission
+            if debutconge<=dt.datetime.strptime(self.datedebut,"%d/%m/%Y"):
+                self.error_var.set('Conge non valide.')
+                valid = False
+        except ValueError:
+            self.error_var.set('Date non valide')
+            valid=False
+        return valid
+
+    def _key_validate(self,action,index,char,**kwargs):
+        valid = True
+        if action=='0':
+            valid=True
+        elif index in ('0','1','3','4','6','7','8','9'):
+            valid=char.isdigit()
+        elif index in ('2','5'):
+            valid= char=='/'
+        else:
+            valid=False
+        return valid
+
 #TODO : implémenter les dialogbox
 #TODO : intégrer les messages d'erreur dans dialogbox
 
@@ -219,17 +261,21 @@ class LabelInput(tk.Frame):
         m.FieldTypes.image_file : {"type":tk.StringVar,"input_type":ValidEntry},
         m.FieldTypes.string_mail: {"type": tk.StringVar, "input_type": ValidMail},
         m.FieldTypes.string_phone: {"type": tk.StringVar, "input_type": ValidPhone},
-        m.FieldTypes.string_matricule: {"type": tk.StringVar, "input_type": ValidMatricule}
-        }
+        m.FieldTypes.date_debut_conge: {"type": tk.StringVar, "input_type": ValidDateDebutConge}
+
+    }
     
-    def __init__(self,parent,mode=None,label=None, MyInfos=m.MyInfos, **kwargs):
+    def __init__(self,parent,mode=None,label=None, **kwargs):
         super().__init__(parent,**kwargs)
         self.mode=mode
-        self.MyInfos=MyInfos
+        if self.mode in ["creation", "modification", "consultation"]:
+            self.MyInfos=m.MyInfos
+        else:
+            self.MyInfos=m.MyConges
 
         MyInfo=self.MyInfos.data.get(label,"Error 404")
         self.var_type = self.field_type[MyInfo['type']]["type"]()
-        input_class=self.field_type[MyInfo["type"]]["input_type"]
+        input_class = self.field_type[MyInfo["type"]]["input_type"]
 
 
 
@@ -238,7 +284,7 @@ class LabelInput(tk.Frame):
         input_args={}
         label_args={}
         error_args = {}
-        if self.mode=="creation":
+        if self.mode in ["creation","c_creation"]:
             if MyInfo.get("values",None):
                input_args["values"]=MyInfo.get("values",None)
         if self.mode=="consultation":
@@ -253,7 +299,7 @@ class LabelInput(tk.Frame):
         if "Valid" in str(input_class) or ttk.Entry:
             if self.mode=="fire":
                 input_args["state"] = MyInfo["fire"]["state"]
-            elif self.mode=="consultation":
+            elif self.mode in ("consultation","c_consultation"):
                 input_args["state"] = "readonly"
 
         #if input_class==tk.Text:
@@ -293,6 +339,9 @@ class LabelInput(tk.Frame):
             #self.error_var = tk.StringVar(value='')
         self.MyLabel = tk.Label(self.LabelsFrame,text=label,anchor="ne",**label_args)
         self.ErrorLabel = tk.Label(self.EntriesFrame, **error_args)
+
+        if self.mode =="c_creation":
+            self.MyInput.configure(state=MyInfo.get("state",''))
 
         #self.MyError =
         

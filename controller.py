@@ -5,6 +5,8 @@ import base_ex as m
 import views3 as v
 import time
 
+#todo change mode_[mode] to personnel_[mode]
+#todo add conge_[mode]
 
 class MyRoot(tk.Tk):
     def __init__(self,*args,**kwargs):
@@ -21,6 +23,9 @@ class MyRoot(tk.Tk):
                         "creation":self.mode_creation,
                         "consultation":self.mode_consultation,
                         "modification":self.mode_modification,
+                        "new_conge":self.new_conge,
+                        "see_conge": None,
+                        "paie": None,
                         "fire":self.mode_fire,
                         "Edit":self.edit_
                         }
@@ -39,16 +44,9 @@ class MyRoot(tk.Tk):
             self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
 
         self.MyMainFrame.grid(row=0,column=0,sticky="nswe")
-        #self.MyMainFrame.propagate()
-        
-        self.MyMainFrame.update_idletasks()
-        #self.MyMainFrame.configure(width=self.MyMainFrame.w,height=self.MyMainFrame.h)
-        self.MyMainFrame.update_idletasks()
-        #self.MyMainFrame.propagate(0)
-        #self.MyMainFrame.pw1.configure(height=self.MyMainFrame.h)
 
-        #we set minimum size. we can shrink and expand but it wont go beyond this min size.
-
+        self.MyMainFrame.update_idletasks()
+        self.MyMainFrame.update_idletasks()
 
         self.columnconfigure(0,weight=1)
         self.rowconfigure(0,weight=1)
@@ -59,9 +57,13 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.update_idletasks()
         print(self.MyMainFrame.MyViewFrame.winfo_geometry())
         print(self.MyMainFrame.winfo_geometry())
+        # print('trying to print var')
+        # print(self.MyMainFrame.MyViewFrame.inputs)
 
         #print(self.MyMainFrame.w)
         #print(self.MyMainFrame.h)
+
+
 
     def save_(self):
         rownum = self.current_index
@@ -83,13 +85,15 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.reset()
 
     def previous_(self):
+        #todo : add delimitation for when we reach the end or the start of the list, to disable the button
         self.current_index=self.current_index-1
         self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
-        pass
-    
+        print(self.current_index)
+
     def next_(self):
         self.current_index = self.current_index + 1
         self.MyMainFrame.MyViewFrame.set(self.data[self.current_index])
+        print(self.current_index)
 
     def edit_(self):
         self.MyMainFrame.MyViewFrame.destroy()
@@ -116,6 +120,15 @@ class MyRoot(tk.Tk):
                 self.construction(myindex=row_index)
                 self.TV.destroy()
                 break
+
+
+
+    def new_conge(self):
+        self.MyMainFrame.MyViewFrame.destroy()
+        self.current_index=None
+        self.mode = "c_creation"
+        self.MyTreeview()
+
 
 
 
@@ -152,41 +165,7 @@ class MyRoot(tk.Tk):
 
         # self.MyMainFrame.MyViewFrame.destroy()
         print("fire")
-        #self.construction()
 
-
-
-
-        #         # or another alternative
-        #         # current=self.treeview.item(self.treeview.focus())
-        #         values = self.treeview.set(current)
-        #         # return a dict of values from the selected row
-        #         return values
-
-
-
-    # def populate_form(self,*args):
-    #         current = v.ViewAll.treeview.selection()
-    #         # or another alternative
-    #         # current=self.treeview.item(self.treeview.focus())
-    #         values = self.treeview.set(current)
-    #         # return a dict of values from the selected row
-    #         return values
-    #
-    #
-    #
-    #
-    #
-    #     mat = v.ViewAll.get_values(*args)
-    #     for row in self.data:
-    #         if row['Matricule']==mat:
-    #             return row
-    #
-    #     # for v.MyMainFrame.MyViewFrame
-
-    
-
-        
 
 r=MyRoot()
 r.mainloop()
