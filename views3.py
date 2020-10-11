@@ -113,10 +113,9 @@ class MyCongeFrame(tk.Frame):
         self.datedebut.trace('w',self._update_datedebut)
 
         #automatic update when debut de conge et fin conge are both filled
-        debut_conge=self.inputs['Début congé'].var_type
-        fin_conge=self.inputs['Fin congé'].var_type
-        debut_conge.trace('w',self._counting_conge)
-        fin_conge.trace('w', self._counting_conge)
+        self.inputs['Début congé'].MyInput.bind('<FocusOut>',self._counting_conge)
+        self.inputs['Fin congé'].MyInput.bind('<FocusOut>',self._counting_conge)
+
 
     def _counting_conge(self,*args):
         debut_conge = self.inputs['Début congé'].var_type.get()
@@ -134,7 +133,7 @@ class MyCongeFrame(tk.Frame):
                     # todo : make the text go red when an error is detected
                     self.inputs['Jours de congés'].MyInput.error_var.set('Date du congé non valide')
                 else:
-                    self.inputs['Jours de congés'].var_type.set(float(nbconge.days))
+                    self.inputs['Jours de congés'].var_type.set(float(nbconge.days+1))
             except ValueError:
                 #todo : make it so that error_var is updated as it should from here
                 #todo : nb de dayoff à comparer avec solde
