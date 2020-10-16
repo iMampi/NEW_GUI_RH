@@ -1,6 +1,7 @@
 import csv
 import os
 
+#todo : créer une nouvelle base personnnel dummy
 class FieldTypes:
     string = 1
     string_list = 2
@@ -84,11 +85,11 @@ class MyInfos:
                              "conge": False,
                              "type":FieldTypes.string
                              },
-        "Sexe":{"csvheader":True,
-                "creation":{"mode":True,"row":5},
-                "consultation":{"mode":True,"row":5},
-                "modification":{"mode":True,"row":5},
-                "fire":{"mode":True,"row":8,"state":"readonly"},
+        "Sexe":{"csvheader": True,
+                "creation": {"mode": True, "row": 5},
+                "consultation": {"mode": True, "row": 5},
+                "modification": {"mode": True, "row": 5},
+                "fire": {"mode": True, "row": 8, "state": "readonly"},
                 "conge": False,
                 "type": FieldTypes.string_list,
                 "values":MyLists.sexe_list
@@ -223,7 +224,8 @@ class MyInfos:
                        "type":FieldTypes.string_list,
                        "values":MyLists.departement_list
                        },
-        "Solde congés disponibles":{"csvheader":True,
+        #todo : ajouter champ congés générer et décaler les champs
+        "Congés générés :{"csvheader":True,
                                     "creation":{"mode":False,"row":22},
                                     "consultation":{"mode":True,"row":22},
                                     "modification":{"mode":True,"row":22},
@@ -232,51 +234,59 @@ class MyInfos:
                                   "type":FieldTypes.decimal
                                   },
         "Congés consommés":{"csvheader":True,
-            "creation":{"mode":False,"row":23},
-                "consultation":{"mode":True,"row":23},
-                "modification":{"mode":True,"row":23},
-                "fire":{"mode":True,"row":26,"state":"readonly"},
+                            "creation":{"mode":False,"row":23},
+                            "consultation":{"mode":True,"row":23},
+                            "modification":{"mode":True,"row":23},
+                            "fire":{"mode":True,"row":26,"state":"readonly"},
                             "conge": False,
                             "type":FieldTypes.decimal
                             },
-        "Date fin":{"csvheader":True,
-                    "creation":{"mode":False,"row":24},
-                    "consultation":{"mode":True,"row":24},
-                    "modification":{"mode":False,"row":24},
+    "Solde congés disponibles": {"csvheader": True,
+                                 "creation": {"mode": False, "row": 24},
+                                 "consultation": {"mode": True, "row": 24},
+                                 "modification": {"mode": True, "row": 24},
+                                 "fire": {"mode": True, "row": 27, "state": "readonly"},
+                                 "conge": False,
+                                 "type": FieldTypes.decimal
+                                 },
+    "Date fin":{"csvheader":True,
+                    "creation":{"mode":False,"row":25},
+                    "consultation":{"mode":True,"row":25},
+                    "modification":{"mode":False,"row":25},
                     "fire":{"mode":True,"row":0,"state":"normal"},
                     "conge": False,
                     "type":FieldTypes.iso_date_string
                     },
         "Motif fin de contrat":{"csvheader":True,
-                                "creation":{"mode":False,"row":25},
-                                "consultation":{"mode":True,"row":25},
-                                "modification":{"mode":False,"row":25},
+                                "creation":{"mode":False,"row":26},
+                                "consultation":{"mode":True,"row":26},
+                                "modification":{"mode":False,"row":26},
                                 "fire":{"mode":True,"row":1,"state":"normal"},
                                 "conge": False,
                                 "type":FieldTypes.string_list,
                                 "values":MyLists.motif_fin_list
                                 },
         "Note":{"csvheader":True,
-            "creation":{"mode":True,"row":26},
-                "consultation":{"mode":True,"row":26},
-                "modification":{"mode":True,"row":26},
+                "creation":{"mode":True,"row":27},
+                "consultation":{"mode":True,"row":27},
+                "modification":{"mode":True,"row":27},
                 "fire":{"mode":True,"row":2,"state":"normal"},
                 "conge": False,
                 "type":FieldTypes.string_long
                 },
         "Image CIN":{"csvheader":True,
-            "creation":{"mode":True,"row":27},
-                "consultation":{"mode":True,"row":27},
-                "modification":{"mode":True,"row":27},
-                "fire":{"mode":True,"row":27,"state":"readonly"},
+            "creation":{"mode":True,"row":28},
+                "consultation":{"mode":True,"row":28},
+                "modification":{"mode":True,"row":28},
+                "fire":{"mode":True,"row":28,"state":"readonly"},
                      "conge": False,
                      "type":FieldTypes.image_file
                      },
         "Photo de l'employé":{"csvheader":True,
-                              "creation":{"mode":True,"row":28},
-                              "consultation":{"mode":True,"row":28},
-                              "modification":{"mode":True,"row":28},
-                              "fire":{"mode":True,"row":28,"state":"readonly"},
+                              "creation":{"mode":True,"row":29},
+                              "consultation":{"mode":True,"row":29},
+                              "modification":{"mode":True,"row":29},
+                              "fire":{"mode":True,"row":29,"state":"readonly"},
                               "conge": False,
                               "type":FieldTypes.image_file
                               }
@@ -423,8 +433,6 @@ class MyConges:
                      "c_modification":{"mode":True,"row":8+3},
                      "type":FieldTypes.decimal
                    },
-
-
           }
 
     def __init__(self):
@@ -438,12 +446,19 @@ class MyConges:
             data = list(csvreader)
             return data
 
+    def _open_base(self):
+        #todo : add if file is missing,so it is new, must create new one
+        with open(self.filename_base_conge, 'r', newline='') as fh:
+            csvreader = csv.DictReader(fh, delimiter=";")
+            data = list(csvreader)
+            return data
+
     def save_record_base(self, data):
         """We only add new entry. there will be no way to update manually"""
         #todo anticipate a way to to update jour de congé consommé pour les jours déposer d'avantage alors que
         # soudainement un jour déclaré férié par les autorités
         #fixme : search if there is a way to optimize the row update
-        newfile= not os.path.exists(self.filename)
+        newfile= not os.path.exists(self.filename_base_conge)
 
         #saving a new entry
         with open(self.filename_base_conge, 'a',newline='') as fh:
