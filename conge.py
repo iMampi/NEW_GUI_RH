@@ -4,17 +4,48 @@ import itertools
 
 class Conge:
     td = dt.date.today()
+    checkingfile=True
+    updateconge=True
     jours_feries={"Noel":dt.date(td.year,12,25),"Nouvel an":dt.date(td.year,1,1)}
+    filename='reftoday.txt'
+    existfile = os.path.exists(filename)
+    while checkingfile:
+        if existfile:
+            with open(filename, 'r', encoding='utf8') as f:
+                reader=f.read(10)
+            #on compare reader à la date d'aujourd'hui
+            ld=dt.datetime.strptime(reader,'%Y-%m-%d')
+            if ld<td :
+                with open(filename, 'w', encoding='utf8') as f:
+                    reader = f.write(td)
+                    checkingfile=False
+                #todo : insert lauchn update conge genere, consomme et solde
+            elif ld==td:
+                checkingfile=False
+                updateconge=False
+                pass
+            else :
+                #todo : insert message box : something wrong with date : 'last time file was opened was in the future'
+                print("Something's wrong. you updated things in the future")
+                checkingfile==False
+                updateconge=False
+                break
+        else:
+            with open(filename, 'w', encoding='utf8') as f:
+                reader = f.write(td)
+
 
     def __init__(self,data,base_conge):
         self.data = data
         self.recap_conge = {}
         self.base_conge = base_conge
 
-        for employee in data:
-            self._genererconge(employee['Matricule'],employee['Date de début'])
-            self._congesconsommes(employee['Matricule'])
-            self._update_solde(employee['Matricule'])
+        while self.updateconge:
+            for employee in data:
+                self._genererconge(employee['Matricule'],employee['Date de début'])
+                self._congesconsommes(employee['Matricule'])
+                self._update_solde(employee['Matricule'])
+            self.updateconge==False
 
 
 
@@ -52,6 +83,7 @@ class Conge:
                 myref=mat[0]
         self.data[myref]['Congés consommés']=consommation
         # return sum(consommation)
+        #todo: verifier si ca update directement controller.application.data ou juste la ref ici.
 
 
     def _update_solde(self,matricule):
