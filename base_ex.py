@@ -357,7 +357,7 @@ class MyInfos:
         if len(csvdata)>0:
             last_row_mat=csvdata[-1]["Matricule"].split("rh")
             old_num=int(last_row_mat[1])
-            new_num='rh'+str(old_num+1)
+            new_num='rh'+str(f'{old_num+1:0>3}')
             return {"Matricule":new_num}
         else:
             return {"Matricule":''}

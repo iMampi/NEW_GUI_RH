@@ -19,13 +19,19 @@ class Conge:
 
 
     def _genererconge(self,matricule,datedebut):
-        
+        #fixme : we use too much memory. stocking 2 time the same data
         delta_years=self.td.year-datedebut.year
         delta_months=self.td.month-datedebut.month
         ratio_day1=1-(self.td.day-1)/calendar.monthrange(int(self.td.year),int(self.td.month))[1]
         ratio_day2=datedebut.day/calendar.monthrange(int(datedebut.year),int(datedebut.month))[1]
         final=(((delta_years*12)+delta_months)*2.5)+(ratio_day1*2.5)+(ratio_day2*2.5)
         self.recap_conge[matricule]=final
+
+        mat_ref = enumerate(self.data['Matricule'])
+        for mat in mat_ref:
+            if mat[1] == matricule:
+                myref = mat[0]
+        self.data[myref]['Congés générés'] = final
 
     def _congesconsommes(self,matricule):
         #todo : add a way to not take the future dayooff in the future not taken yet
@@ -44,7 +50,6 @@ class Conge:
         for mat in mat_ref:
             if mat[1]==matricule:
                 myref=mat[0]
-
         self.data[myref]['Congés consommés']=consommation
         # return sum(consommation)
 
