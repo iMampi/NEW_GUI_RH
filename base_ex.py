@@ -143,7 +143,7 @@ class MyInfos:
                         "type":FieldTypes.string_phone
                         },
         "Téléphone 02":{"csvheader":True,
-            "creation":{"mode":True,"row":12},
+                        "creation":{"mode":True,"row":12},
                         "consultation":{"mode":True,"row":12},
                         "modification":{"mode":True,"row":12},
                         "fire":{"mode":True,"row":15,"state":"readonly"},
@@ -224,13 +224,12 @@ class MyInfos:
                        "type":FieldTypes.string_list,
                        "values":MyLists.departement_list
                        },
-        #todo : ajouter champ congés générer et décaler les champs
-        "Congés générés :{"csvheader":True,
+        "Congés générés":{"csvheader":True,
                                     "creation":{"mode":False,"row":22},
                                     "consultation":{"mode":True,"row":22},
                                     "modification":{"mode":True,"row":22},
                                     "fire":{"mode":True,"row":25,"state":"readonly"},
-                                    "conge": False,
+                                    "conge": True,
                                   "type":FieldTypes.decimal
                                   },
         "Congés consommés":{"csvheader":True,
@@ -241,7 +240,7 @@ class MyInfos:
                             "conge": False,
                             "type":FieldTypes.decimal
                             },
-    "Solde congés disponibles": {"csvheader": True,
+        "Solde congés disponibles": {"csvheader": True,
                                  "creation": {"mode": False, "row": 24},
                                  "consultation": {"mode": True, "row": 24},
                                  "modification": {"mode": True, "row": 24},
@@ -249,7 +248,7 @@ class MyInfos:
                                  "conge": False,
                                  "type": FieldTypes.decimal
                                  },
-    "Date fin":{"csvheader":True,
+        "Date fin":{"csvheader":True,
                     "creation":{"mode":False,"row":25},
                     "consultation":{"mode":True,"row":25},
                     "modification":{"mode":False,"row":25},
@@ -297,6 +296,7 @@ class MyInfos:
         self.filename = filename
 
     def save_record(self, data, rownum=None):
+        #data is a dict
         #fixme : search if there is a way to optimize the row update
         newfile= not os.path.exists(self.filename)
 
@@ -323,31 +323,44 @@ class MyInfos:
             pass
 
     def load_records(self, rownum=None):
-        with open(self.filename, 'r',newline='') as fh:
-            csvreader = csv.DictReader(fh,
-                                       delimiter=";"
-                                       )
-            if len(set(csvreader.fieldnames) -
-                   set([x for x in self.data.keys() if self.data[x]['csvheader']])) == 0 :
-                print('Data base is ok.')
+        existfile = os.path.exists(self.filename)
+        if existfile:
+            with open(self.filename, 'r',newline='') as fh:
+                csvreader = csv.DictReader(fh,
+                                           delimiter=";"
+                                           )
+                if len(set(csvreader.fieldnames) -
+                       set([x for x in self.data.keys() if self.data[x]['csvheader']])) == 0 :
+                    print('Data base is ok.')
 
-                data = list(csvreader)
+                    data = list(csvreader)
+                else:
+                    raise Exception('Error in the CSV file')
+                    return
+            if rownum==None:
+                return data
             else:
-                raise Exception('Error in the CSV file')
-                return
-        if rownum==None:
-            return data
+                return data[int(rownum)-1]
         else:
-            return data[int(rownum)-1]
+            #todo : add this branch in all load:
+            #todo : message box about creating a database
+            csvheaders=MyInfos.data.keys()
+            empty_data= {key : '' for key in csvheaders}
+            self.save_record(empty_data, rownum=None)
+            self.load_records()
+
 
 
     def new_matricule(self):
         #fixme : to optimize
         csvdata=self.load_records()
-        last_row_mat=csvdata[-1]["Matricule"].split("rh")
-        old_num=int(last_row_mat[1])
-        new_num='rh'+str(old_num+1)
-        return {"Matricule":new_num}
+        if len(csvdata)>0:
+            last_row_mat=csvdata[-1]["Matricule"].split("rh")
+            old_num=int(last_row_mat[1])
+            new_num='rh'+str(old_num+1)
+            return {"Matricule":new_num}
+        else:
+            return {"Matricule":''}
 
 class MyConges:
     #fixme : change he + with real value

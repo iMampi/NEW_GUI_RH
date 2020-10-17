@@ -4,7 +4,6 @@ import base_ex as m
 import datetime as dt
 from dateutil.relativedelta import relativedelta
 #TODO : bind keyTab with tk.text to change widget instead of 4spaces
-#todo : jour de congés  automatique mise à jour quand debut et fin sont complété
 
 class ValidateMixin :
     def __init__(self,*args,error_var=None, **kwargs) :
@@ -261,6 +260,7 @@ class LabelInput(tk.Frame):
         m.FieldTypes.image_file : {"type":tk.StringVar,"input_type":ValidEntry},
         m.FieldTypes.string_mail: {"type": tk.StringVar, "input_type": ValidMail},
         m.FieldTypes.string_phone: {"type": tk.StringVar, "input_type": ValidPhone},
+        m.FieldTypes.string_matricule: {"type": tk.StringVar, "input_type": ValidMatricule},
         m.FieldTypes.date_debut_conge: {"type": tk.StringVar, "input_type": ValidDateDebutConge}
 
     }

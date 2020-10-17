@@ -4,10 +4,12 @@ import widgets_3 as w
 import base_ex as m
 import views3 as v
 import time
+import conge
 
 #todo change mode_[mode] to personnel_[mode]
 #todo add conge_[mode]
-
+#todo : mode "modificaation", faire en sorte que lorsque "save" est exécuter, génération automatique de
+# congés generé, congés consommé, et congé disponible
 class MyRoot(tk.Tk):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -15,7 +17,9 @@ class MyRoot(tk.Tk):
 
         self.mycsv = m.MyInfos("mydb.csv")
         self.data=self.mycsv.load_records()
+        # self.conge_data=m.MyConges._open_base()
         self.current_index=None
+
 
         self.callbacks={"Save":self.save_,
                         "Previous":self.previous_,
@@ -30,6 +34,8 @@ class MyRoot(tk.Tk):
                         "Edit":self.edit_
                         }
         self.MyMainFrame=None
+
+        # conge(self.data,self.conge_data)
 
         self.construction()
         self.minsize(width=660, height=900)
@@ -83,6 +89,7 @@ class MyRoot(tk.Tk):
 
         # self.mycsv.save_record(mydata,rownum=rownum)
         self.MyMainFrame.MyViewFrame.reset()
+        self.MyMainFrame.MyViewFrame.set(self.mycsv.new_matricule())
 
     def previous_(self):
         #todo : add delimitation for when we reach the end or the start of the list, to disable the button
@@ -127,6 +134,11 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.destroy()
         self.current_index=None
         self.mode = "c_creation"
+        #todo : mise à jour des congés générés si nouveaux jour d'ouverture du fichier
+        #todo : mise à jour des congés générés si base a été modifié
+        # (cas des jours fériés ajuté, ou modification durée du congé
+
+
         self.MyTreeview()
 
 

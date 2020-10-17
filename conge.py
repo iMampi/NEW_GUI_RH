@@ -7,9 +7,9 @@ class Conge:
     jours_feries={"Noel":dt.date(td.year,12,25),"Nouvel an":dt.date(td.year,1,1)}
 
     def __init__(self,data,base_conge):
-        self.data=data
-        self.recap_conge={}
-        self.base_conge=base_conge
+        self.data = data
+        self.recap_conge = {}
+        self.base_conge = base_conge
 
         for employee in data:
             self._genererconge(employee['Matricule'],employee['Date de début'])

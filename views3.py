@@ -4,6 +4,7 @@ import widgets_3 as w
 import base_ex as m
 import tkinter.font as tkf
 import datetime as dt
+import conge
 
 # TODO: add frame to view pictures
 # todo: replace all self.mode by juste "mode"
@@ -40,7 +41,7 @@ class MyViewFrame(tk.Frame):
                     self.inputs[field].grid(row=m.MyInfos.data[field][self.mode]["row"], column=0)
                     self.columnconfigure(0, weight=0,minsize=100)
                     self.columnconfigure(1, weight=1,minsize=150)
-        elif self.mode is "fire":
+        elif self.mode == "fire":
             for field in m.MyInfos.data.keys():
                 if m.MyInfos.data[field][self.mode]["mode"] == True:
                     self.inputs[field] = w.LabelInput(self, mode=self.mode, label=field)
@@ -64,8 +65,10 @@ class MyViewFrame(tk.Frame):
     def reset(self):
         for widget in self.inputs.values():
             widget.delete()
-
-        #todo : insert dialog box
+        # new_matricule = m.mycsv.new_matricule()
+        # self.inputs['Matricule'].set(new_matricule)
+        #
+        # #todo : insert dialog box
         print('RESET')
 
     def set(self,data_dict):
@@ -140,6 +143,10 @@ class MyCongeFrame(tk.Frame):
                 #todo : make the text go red when an error is detected
                 self.inputs['Jours de congés'].MyInput.error_var.set('Date du congé non valide')
                 # should it still be there? valid=False
+    def _initial_conge(self):
+        self.inputs['Début congé']
+        pass
+
 
 
 
