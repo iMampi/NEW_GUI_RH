@@ -224,7 +224,7 @@ class MyMainFrame(tk.Frame):
         pw1.paneconfigure(pw2,sticky="nswe")
 
         #MYVIEWFRAME
-        if self.mode in ["creation","modification","fire"]:
+        if self.mode in ["creation","modification","consultation","fire"]:
             self.MyViewFrame=MyViewFrame(pw2,callbacks=self.callbacks,mode=self.mode)
             pw2.paneconfigure(self.MyViewFrame, sticky="nswe")
 

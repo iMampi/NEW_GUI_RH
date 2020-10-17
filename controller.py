@@ -16,8 +16,11 @@ class MyRoot(tk.Tk):
         self.mode=None
 
         self.mycsv = m.MyInfos("mydb.csv")
-        self.data=self.mycsv.load_records()
-        # self.conge_data=m.MyConges._open_base()
+        self.data = self.mycsv.load_records()
+
+        self.conge_data = m.MyConges()._open_base()
+        self.cg=conge.Conge(self.data,self.conge_data)
+
         self.current_index=None
 
 
@@ -155,7 +158,6 @@ class MyRoot(tk.Tk):
 
     def mode_consultation(self):
         self.MyMainFrame.MyViewFrame.destroy()
-
         self.mode = "consultation"
         self.MyTreeview()
         #self.MyMainFrame.MyViewFrame.destroy()

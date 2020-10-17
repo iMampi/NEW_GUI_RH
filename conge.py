@@ -1,6 +1,5 @@
 import datetime as dt
-import calendar
-import itertools
+import calendar, itertools, os
 
 class Conge:
     td = dt.date.today()
@@ -9,18 +8,27 @@ class Conge:
     jours_feries={"Noel":dt.date(td.year,12,25),"Nouvel an":dt.date(td.year,1,1)}
     filename='reftoday.txt'
     existfile = os.path.exists(filename)
+    #on recup la date de derniere maj de conge via la fichier
+    #todo : add chechking the validyty of data in the file
+    #fixme : make it prettier
     while checkingfile:
         if existfile:
             with open(filename, 'r', encoding='utf8') as f:
                 reader=f.read(10)
             #on compare reader à la date d'aujourd'hui
             ld=dt.datetime.strptime(reader,'%Y-%m-%d')
-            if ld<td :
+            if ValueError:
                 with open(filename, 'w', encoding='utf8') as f:
-                    reader = f.write(td)
+                    writer = f.write(str(td))
+                checkingfile==False
+                print("Date expected. we fixed it")
+
+            if ld<dt.datetime(td.year,td.month,td.day) :
+                with open(filename, 'w', encoding='utf8') as f:
+                    reader = f.write(str(td))
                     checkingfile=False
                 #todo : insert lauchn update conge genere, consomme et solde
-            elif ld==td:
+            elif ld==dt.datetime(td.year,td.month,td.day):
                 checkingfile=False
                 updateconge=False
                 pass
@@ -32,8 +40,8 @@ class Conge:
                 break
         else:
             with open(filename, 'w', encoding='utf8') as f:
-                reader = f.write(td)
-
+                writer = f.write(str(td))
+            checkingfile = False
 
     def __init__(self,data,base_conge):
         self.data = data
@@ -41,57 +49,65 @@ class Conge:
         self.base_conge = base_conge
 
         while self.updateconge:
-            for employee in data:
-                self._genererconge(employee['Matricule'],employee['Date de début'])
-                self._congesconsommes(employee['Matricule'])
-                self._update_solde(employee['Matricule'])
-            self.updateconge==False
+            for employee in self.data:
+                self.genererconge(employee['Matricule'], employee['Date de début'])
+                self.congesconsommes(employee['Matricule'])
+                self.update_solde(employee['Matricule'])
+            self.updateconge = False
 
 
 
-    def _genererconge(self,matricule,datedebut):
+    def genererconge(self,matricule,datedebut):
         #fixme : we use too much memory. stocking 2 time the same data
-        delta_years=self.td.year-datedebut.year
-        delta_months=self.td.month-datedebut.month
-        ratio_day1=1-(self.td.day-1)/calendar.monthrange(int(self.td.year),int(self.td.month))[1]
-        ratio_day2=datedebut.day/calendar.monthrange(int(datedebut.year),int(datedebut.month))[1]
+        date_sample=datedebut.split('/')
+        delta_years=self.td.year-int(date_sample[2])
+        delta_months=self.td.month-int(date_sample[1])
+        ratio_day1=1-(int(date_sample[0])-1)/calendar.monthrange(int(date_sample[2]),int(date_sample[1]))[1]
+        ratio_day2=(self.td.day)/calendar.monthrange(int(self.td.year),int(self.td.month))[1]
         final=(((delta_years*12)+delta_months)*2.5)+(ratio_day1*2.5)+(ratio_day2*2.5)
         self.recap_conge[matricule]=final
 
-        mat_ref = enumerate(self.data['Matricule'])
-        for mat in mat_ref:
-            if mat[1] == matricule:
-                myref = mat[0]
+        #fixme : make it prettier
+        mymat=(x['Matricule'] for x in self.data)
+        mat_ref = enumerate(mymat)
+        for num,mat in mat_ref:
+            if mat == matricule:
+                myref = num
         self.data[myref]['Congés générés'] = final
 
-    def _congesconsommes(self,matricule):
+    def congesconsommes(self,matricule):
         #todo : add a way to not take the future dayooff in the future not taken yet
         #todo : add a field that return all dayoff already consummed and those not consummed yet
         # todo : add update for "conge recp.csv"
+        #todo : add case handler if mat not in base_conge
         checker=[]
         for entry in self.base_conge:
-            if entry['Matricule']==matricule:
+            if entry.get('Matricule','')==matricule:
                 checker.append(1)
             else:
                 checker.append(0)
         #fixme : to sum as a generator
         consommation = sum(list(itertools.compress(self.base_conge,checker)))
 
-        mat_ref=enumerate(self.data['Matricule'])
-        for mat in mat_ref:
-            if mat[1]==matricule:
-                myref=mat[0]
-        self.data[myref]['Congés consommés']=consommation
+        mymat=(x['Matricule'] for x in self.data)
+        mat_ref = enumerate(mymat)
+        for num,mat in mat_ref:
+            if mat == matricule:
+                myref = num
+        self.data[myref]['Congés générés'] = consommation
         # return sum(consommation)
         #todo: verifier si ca update directement controller.application.data ou juste la ref ici.
 
 
-    def _update_solde(self,matricule):
-        mat_ref = enumerate(self.data['Matricule'])
-        for mat in mat_ref:
-            if mat[1] == matricule:
-                myref = mat[0]
+    def update_solde(self,matricule):
+        #todo : add case handler if mat not in base_conge
 
+        mymat=(x['Matricule'] for x in self.data)
+        mat_ref = enumerate(mymat)
+        for num,mat in mat_ref:
+            if mat == matricule:
+                myref = num
+        if mat in
         new_solde=self.recap_conge.get(matricule,'')-self.data[myref]['Congés consommés']
         self.data[myref]['Solde congés disponibles']=new_solde
         #todo : add update for "conge recp.csv"
@@ -99,6 +115,6 @@ class Conge:
 
         pass
 
-    def _new_jour_ferie(self):
+    def new_jour_ferie(self):
         pass
 
