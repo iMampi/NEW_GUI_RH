@@ -16,8 +16,9 @@ class Conge:
             with open(filename, 'r', encoding='utf8') as f:
                 reader=f.read(10)
             #on compare reader à la date d'aujourd'hui
-            ld=dt.datetime.strptime(reader,'%Y-%m-%d')
-            if ValueError:
+            try:
+                ld=dt.datetime.strptime(reader,'%Y-%m-%d')
+            except ValueError:
                 with open(filename, 'w', encoding='utf8') as f:
                     writer = f.write(str(td))
                 checkingfile==False
@@ -80,22 +81,32 @@ class Conge:
         #todo : add a field that return all dayoff already consummed and those not consummed yet
         # todo : add update for "conge recp.csv"
         #todo : add case handler if mat not in base_conge
-        checker=[]
-        for entry in self.base_conge:
-            if entry.get('Matricule','')==matricule:
-                checker.append(1)
-            else:
-                checker.append(0)
-        #fixme : to sum as a generator
-        consommation = sum(list(itertools.compress(self.base_conge,checker)))
 
-        mymat=(x['Matricule'] for x in self.data)
-        mat_ref = enumerate(mymat)
+        #tuple of all mat in self.data
+        datamat=(x['Matricule'] for x in self.data)
+        mat_ref = enumerate(datamat)
         for num,mat in mat_ref:
             if mat == matricule:
                 myref = num
-        self.data[myref]['Congés générés'] = consommation
-        # return sum(consommation)
+
+        #tuple of all mat in self.base_conge
+        basemat=(x['Matricule'] for x in self.base_conge)
+
+        #first verify if base_conge is not empty
+        if len(basemat)>0:
+            for mat in datamat:
+                #we calcul the congeconsomme only if the matricule is in base_conge
+                if mat in basemat:
+                    checker=[]
+                    for entry in self.base_conge:
+                        if entry.get('Matricule','')==matricule:
+                            checker.append(1)
+                        else:
+                            checker.append(0)
+                    #fixme : to sum as a generator
+                    consommation = sum(list(itertools.compress(self.base_conge,checker)))
+
+                    self.data[myref]['Congés générés'] = consommation
         #todo: verifier si ca update directement controller.application.data ou juste la ref ici.
 
 
@@ -107,8 +118,8 @@ class Conge:
         for num,mat in mat_ref:
             if mat == matricule:
                 myref = num
-        if mat in
-        new_solde=self.recap_conge.get(matricule,'')-self.data[myref]['Congés consommés']
+
+        new_solde=self.data[myref]['Congés générés']-self.data[myref]['Congés consommés']
         self.data[myref]['Solde congés disponibles']=new_solde
         #todo : add update for "conge recp.csv"
 
