@@ -310,13 +310,22 @@ class SelectFrame(tk.Frame):
 
 
 class ViewAll(tk.Toplevel):
-    def __init__(self,data,callbacks,*args,**kwargs):
+    def __init__(self,data,callbacks,mode,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.callbacks=callbacks
         self.geometry("500x400")
         self.minsize(width=500, height=400)
         self.title("Sélectionnez l'individu")
-        self.data=data
+        #todo : handle mode selection when consultation (can see everyone), edit (can see only see active one)
+        if mode in ["consultation","fire","c_consultation"]:
+            self.data=data
+        else:
+            for employee in data:
+                active_only=[]
+                if employee['Date fin']=='':
+                    active_only.append(employee)
+            self.data=active_only
+
         self.data_form=None
 
         self.control_frame = SelectFrame(self)
@@ -417,7 +426,6 @@ class ViewAll(tk.Toplevel):
         # MyViewFrame.set(data_dict=values)
         print(values)
         self.data_form=values
-
         return values
 
 

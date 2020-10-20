@@ -16,11 +16,15 @@ class MyRoot(tk.Tk):
         self.mode=None
 
         self.mycsv = m.MyInfos("mydb.csv")
+        #loads list of dictionnary
         self.data = self.mycsv.load_records()
-
+        print(self.data)
         self.conge_data = m.MyConges()._open_base()
-        self.cg=conge.Conge(self.data,self.conge_data)
-
+        cg=conge.Conge(self.data,self.conge_data)
+        updated_conge_data=cg.update_conge_csv()
+        if updated_conge_data[0]:
+            self.data=updated_conge_data[1]
+        print(self.data)
         self.current_index=None
 
 
@@ -109,14 +113,11 @@ class MyRoot(tk.Tk):
         self.MyMainFrame.MyViewFrame.destroy()
         self.mode="modification"
         self.construction(myindex=self.current_index)
-
-
-
         pass
 
 
     def MyTreeview(self):
-        self.TV=v.ViewAll(self.data,self.callbacks)
+        self.TV=v.ViewAll(self.data,self.callbacks,self.mode)
         self.TV.populate()
         self.TV.bind('<<TreeviewOpen>>', self.doubleclick)
 

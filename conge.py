@@ -5,6 +5,7 @@ class Conge:
     td = dt.date.today()
     checkingfile=True
     updateconge=True
+    updated=True
     jours_feries={"Noel":dt.date(td.year,12,25),"Nouvel an":dt.date(td.year,1,1)}
     filename='reftoday.txt'
     existfile = os.path.exists(filename)
@@ -28,16 +29,20 @@ class Conge:
                 with open(filename, 'w', encoding='utf8') as f:
                     reader = f.write(str(td))
                     checkingfile=False
+
                 #todo : insert lauchn update conge genere, consomme et solde
             elif ld==dt.datetime(td.year,td.month,td.day):
                 checkingfile=False
                 updateconge=False
+                updated=False
                 pass
             else :
                 #todo : insert message box : something wrong with date : 'last time file was opened was in the future'
                 print("Something's wrong. you updated things in the future")
                 checkingfile==False
                 updateconge=False
+                updated=False
+
                 break
         else:
             with open(filename, 'w', encoding='utf8') as f:
@@ -48,7 +53,8 @@ class Conge:
         self.data = data
         self.recap_conge = {}
         self.base_conge = base_conge
-
+        print('base conge :')
+        print(self.base_conge)
         while self.updateconge:
             for employee in self.data:
                 self.genererconge(employee['Matricule'], employee['Date de début'])
@@ -89,14 +95,14 @@ class Conge:
             if mat == matricule:
                 myref = num
 
-        #tuple of all mat in self.base_conge
-        basemat=(x['Matricule'] for x in self.base_conge)
-
+        #tuple of all mat in self.base_conge (generator)
+        basecongemat=(x['Matricule'] for x in self.base_conge)
+        basecongemat_length=sum(1 for matricule in basecongemat)
         #first verify if base_conge is not empty
-        if len(basemat)>0:
+        if basecongemat_length>0:
             for mat in datamat:
                 #we calcul the congeconsomme only if the matricule is in base_conge
-                if mat in basemat:
+                if mat in basecongemat:
                     checker=[]
                     for entry in self.base_conge:
                         if entry.get('Matricule','')==matricule:
@@ -122,9 +128,9 @@ class Conge:
         new_solde=self.data[myref]['Congés générés']-self.data[myref]['Congés consommés']
         self.data[myref]['Solde congés disponibles']=new_solde
         #todo : add update for "conge recp.csv"
-
-
         pass
+    def update_conge_csv(self):
+        return self.updated,self.data
 
     def new_jour_ferie(self):
         pass

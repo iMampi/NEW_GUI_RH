@@ -294,6 +294,18 @@ class MyInfos:
     def __init__(self, filename):
         
         self.filename = filename
+        self.create_database()
+
+    def create_database(self):
+        newfile= not os.path.exists(self.filename)
+        if newfile:
+            with open(self.filename, 'w', newline='') as fh:
+                csvwriter = csv.DictWriter(fh,
+                                           fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
+                                           delimiter=";"
+                                           )
+                csvwriter.writeheader()
+
 
     def save_record(self, data, rownum=None):
         #data is a dict
@@ -307,8 +319,6 @@ class MyInfos:
                                            fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
                                            delimiter=";"
                                            )
-                if newfile:
-                    csvwriter.writeheader()
                 csvwriter.writerow(data)
         else:
             with open(self.filename, 'w',newline='') as fh:
@@ -451,6 +461,7 @@ class MyConges:
     def __init__(self):
         self.filename_base_conge = "conge.csv"
         self.filename_recap_conge = "recap_conge.csv"
+        self.create_record_base()
 
     def _open_recap(self):
         #todo : add if file is missing,so it is new, must create new one
@@ -465,22 +476,32 @@ class MyConges:
             csvreader = csv.DictReader(fh, delimiter=";")
             data = list(csvreader)
             return data
+    def create_record_base(self):
+        """check at the start if the file exist, and create it if not"""
+        #todo : do the same for all method where there is  "save"
+        newfile= not os.path.exists(self.filename_base_conge)
+        if newfile:
+            with open(self.filename_base_conge, 'w', newline='') as fh:
+                csvwriter = csv.DictWriter(fh,
+                                           fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
+                                           delimiter=";"
+                                           )
+                csvwriter.writeheader()
+
+
+
 
     def save_record_base(self, data):
         """We only add new entry. there will be no way to update manually"""
         #todo anticipate a way to to update jour de congé consommé pour les jours déposer d'avantage alors que
         # soudainement un jour déclaré férié par les autorités
         #fixme : search if there is a way to optimize the row update
-        newfile= not os.path.exists(self.filename_base_conge)
-
         #saving a new entry
         with open(self.filename_base_conge, 'a',newline='') as fh:
             csvwriter = csv.DictWriter(fh,
                                        fieldnames=[x for x in self.data.keys() if self.data[x]['csvheader']],
                                        delimiter=";"
                                        )
-            if newfile:
-                csvwriter.writeheader()
             csvwriter.writerow(data)
 
 
