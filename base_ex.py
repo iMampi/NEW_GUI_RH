@@ -230,15 +230,19 @@ class MyInfos:
                                     "modification":{"mode":True,"row":22},
                                     "fire":{"mode":True,"row":25,"state":"readonly"},
                                     "conge": True,
-                                  "type":FieldTypes.decimal
-                                  },
+                                    "type":FieldTypes.decimal,
+                                    "default": 0
+
+                          },
         "Congés consommés":{"csvheader":True,
                             "creation":{"mode":False,"row":23},
                             "consultation":{"mode":True,"row":23},
                             "modification":{"mode":True,"row":23},
                             "fire":{"mode":True,"row":26,"state":"readonly"},
                             "conge": False,
-                            "type":FieldTypes.decimal
+                            "type":FieldTypes.decimal,
+                            "default": 0
+
                             },
         "Solde congés disponibles": {"csvheader": True,
                                  "creation": {"mode": False, "row": 24},
@@ -246,8 +250,9 @@ class MyInfos:
                                  "modification": {"mode": True, "row": 24},
                                  "fire": {"mode": True, "row": 27, "state": "readonly"},
                                  "conge": False,
-                                 "type": FieldTypes.decimal
-                                 },
+                                 "type": FieldTypes.decimal,
+                                 "default": 0
+                                     },
         "Date fin":{"csvheader":True,
                     "creation":{"mode":False,"row":25},
                     "consultation":{"mode":True,"row":25},
@@ -311,7 +316,7 @@ class MyInfos:
         #data is a dict
         #fixme : search if there is a way to optimize the row update
         newfile= not os.path.exists(self.filename)
-
+        print(data)
         if rownum==None:
             #saving a new entry
             with open(self.filename, 'a',newline='') as fh:

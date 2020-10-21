@@ -24,7 +24,11 @@ class MyRoot(tk.Tk):
         updated_conge_data=cg.update_conge_csv()
         if updated_conge_data[0]:
             self.data=updated_conge_data[1]
+            #rownum=1 just to execute full save of all data
+            self.mycsv.save_record(self.data,rownum=1)
+        print('saved with conge updated')
         print(self.data)
+
         self.current_index=None
 
 

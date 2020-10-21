@@ -111,12 +111,18 @@ class Conge:
                             checker.append(0)
                     #fixme : to sum as a generator
                     consommation = sum(list(itertools.compress(self.base_conge,checker)))
+                    if consommation=='':
+                        consommation=0
+                    self.data[myref]['Congés consommés'] = consommation
+        else :
+            for employee in self.data:
+                employee['Congés consommés'] = 0
 
-                    self.data[myref]['Congés générés'] = consommation
         #todo: verifier si ca update directement controller.application.data ou juste la ref ici.
 
 
     def update_solde(self,matricule):
+        #todo : add trigger when a new conge is created
         #todo : add case handler if mat not in base_conge
 
         mymat=(x['Matricule'] for x in self.data)
@@ -126,6 +132,10 @@ class Conge:
                 myref = num
 
         new_solde=self.data[myref]['Congés générés']-self.data[myref]['Congés consommés']
+        # new_solde=0
+        # congegen=self.data[myref]['Congés générés']
+        # congecons=self.data[myref]['Congés consommés']
+
         self.data[myref]['Solde congés disponibles']=new_solde
         #todo : add update for "conge recp.csv"
         pass
